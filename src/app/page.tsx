@@ -6,7 +6,7 @@ import React from 'react';
   return (
     <div className="flex justify-center items-center h-screen bg-orange-400">
       <div className="w-full max-w-md bg-orange-200 p-8 rounded-lg shadow-lg flex flex-col items-center">
-        <div className='rounded-full bg-orange-500 w-20 flex flex-col justify-center items-center aspect-square '>
+        <div className='rounded-full bg-orange-500 w-20 flex flex-col justify-center items-center aspect-square p-2'>
 
         <Logo title/>
         </div>
@@ -19,7 +19,7 @@ import React from 'react';
             <input
               id="email"
               type="email"
-              className="placeholder-gray-600 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-orange-400"
+              className="placeholder-gray-600 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-700 bg-orange-400"
               placeholder="Digite seu email"
               required
             />
@@ -32,7 +32,7 @@ import React from 'react';
             <input
               id="password"
               type="password"
-              className="placeholder-gray-600 bg-orange-400 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="placeholder-gray-600 bg-orange-400 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-700"
               placeholder="Digite sua senha"
               required
             />
@@ -58,7 +58,7 @@ import React from 'react';
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Não tem uma conta?{' '}
-          <a href="/cadastro" className="text-orange-500 hover:underline">
+          <a href="/dashboard" className="text-orange-500 hover:underline">
             Cadastre-se
           </a>
         </p>
