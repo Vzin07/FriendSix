@@ -1,7 +1,8 @@
+'use Client'
 import Logo from '@/components/logo';
 import React from 'react';
 
-function Login() {
+ function Login() {
   return (
     <div className="flex justify-center items-center h-screen bg-orange-400">
       <div className="w-full max-w-md bg-orange-200 p-8 rounded-lg shadow-lg flex flex-col items-center">
@@ -57,7 +58,7 @@ function Login() {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Não tem uma conta?{' '}
-          <a href="#" className="text-orange-500 hover:underline">
+          <a href="/cadastro" className="text-orange-500 hover:underline">
             Cadastre-se
           </a>
         </p>
