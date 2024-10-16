@@ -1,40 +1,39 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from '@/components/logo';
+import { useFormState } from 'react-dom';
+import { signUp } from './actions';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+
+const initialState: InitialState = {
+  success: false,
+  errors: {}
+}
 
 function Signup() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-  // Função para lidar com mudanças nos inputs (com tipagem correta para TypeScript)
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  const [state, formAction] = useFormState(signUp, initialState)
 
-  // Função para lidar com o envio do formulário (com tipagem correta para TypeScript)
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Lógica de envio de dados de cadastro
+  const router = useRouter()
 
-    const form = new FormData(e.currentTarget)
-
-    const formData0 = {
-      name: form.get('name'),
-      
+  useEffect(() => {
+    const login = async () => {
+      await signIn('credentials', {
+        email,
+        password,
+        redirect: false
+    })
     }
 
-    console.log(Object.fromEntries(form))
-
-    console.log('Dados cadastrados:', formData);
-  };
+    if (state.success) {
+      login()
+      
+      router.replace('/dashboard')
+    }
+  }, [state.success, router])
 
   return (
     <div className="flex justify-center items-center h-screen bg-orange-400">
@@ -43,7 +42,7 @@ function Signup() {
         <Logo title/>
         </div>
         <h2 className="text-2xl font-bold text-center mb-6">Cadastrar-se</h2>
-        <form onSubmit={handleSubmit} className='w-full'>
+        <form action={formAction} className='w-full'>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
               Nome
@@ -52,8 +51,6 @@ function Signup() {
               id="name"
               name="name"
               type="text"
-              value={formData.name}
-              onChange={handleChange}
               className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600"
               placeholder="Digite seu nome"
               required
@@ -68,8 +65,7 @@ function Signup() {
               id="email"
               name="email"
               type="email"
-              value={formData.email}
-              onChange={handleChange}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600"
               placeholder="Digite seu email"
               required
@@ -84,26 +80,9 @@ function Signup() {
               id="password"
               name="password"
               type="password"
-              value={formData.password}
-              onChange={handleChange}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600"
               placeholder="Digite sua senha"
-              required
-            />
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword">
-              Confirme a Senha
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600"
-              placeholder="Confirme sua senha"
               required
             />
           </div>

@@ -24,7 +24,7 @@ export const nextAuthOptions: NextAuthOptions = {
                 try {
                     const user = {
                         id: '3e9f0db7-5ec1-49df-aa33-132eb2d52a9f',
-                        email: 'popeyemelancia@email.com',
+                        email: 'piluqukebu@mailinator.com',
                         password: '12345678'
                     }
 
