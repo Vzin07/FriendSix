@@ -1,4 +1,5 @@
 import Logo from "@/components/logo";
+import ComponetGrup from "@/components/grup";
 
 export default function Dashboard() {
   return (
@@ -38,7 +39,7 @@ export default function Dashboard() {
         </div>
 
         <div className="flex items-center p-2 cursor-pointer">
-          <h2 className="font-morsan text-gray-200 hover:text-blue-600">
+          <h2 className="font-morsan text-gray-200 hover:text-blue-600 text-xl pr-1">
             <strong>Username</strong>
           </h2>
           <svg
@@ -64,7 +65,7 @@ export default function Dashboard() {
             <h1 className="font-morsan text-2xl text-black pb-5">
               <strong>AÇÕES</strong>
             </h1>
-            <div className="p-y-8 flex cursor-pointer hover:underline items-center">
+            <div className="p-y-8 flex cursor-pointer hover:underline items-center ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -101,16 +102,18 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="w-full h-5/6 border-black border-solid border-b-2 flex">
-            <div className="h-8 w-full flex ">
-              <div className="border-black border-solid border-y-2 border-e-2 w-6/12 pl-2">
+          <div className="w-full h-5/6 border-black border-solid border-b-2">
+            <div className="h-8 w-full flex justify-center items-center text-center">
+              <div className="border-black border-solid border-y-2 border-e-2 w-6/12 pl-2 hover:bg-orange-600">
                 <h3 className="hover:underline cursor-pointer">Meus Grupos</h3>
               </div>
-              <div className="w-6/12 border-black border-solid border-2 border-s-0 border-e-0 pl-2">
+              <div className="w-6/12 border-black border-solid border-2 border-s-0 border-e-0 pl-2 hover:bg-orange-600">
                 <h3 className="hover:underline cursor-pointer">Meus Eventos</h3>
               </div>
             </div>
-            <div></div>
+            <div className="p-3 flex justify-center ">
+              <ComponetGrup />
+            </div>
           </div>
         </div>
         <div className="w-9/12 border-2 border-solid border-black ">
