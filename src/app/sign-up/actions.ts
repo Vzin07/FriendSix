@@ -1,8 +1,11 @@
 'use server'
 
+import { PrismaClient, usuarios } from "@prisma/client"
 import { z } from "zod"
 
 export async function signUp(prevState: InitialState, formData: FormData) {
+    const prisma = new PrismaClient()
+    
     const state = {
         success: true,
         errors: {}
@@ -31,5 +34,13 @@ export async function signUp(prevState: InitialState, formData: FormData) {
         return state
     }
 
+    await prisma.usuarios.create({
+        data: {
+            USU_NOME: data.name,
+            USU_EMAIL: data.email,
+            USU_SENHA: data.password
+        }
+    })
+    
     return state
 }

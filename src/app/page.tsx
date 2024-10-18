@@ -111,7 +111,7 @@ import { useRouter } from 'next/navigation';
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Não tem uma conta?{' '}
-          <a href="/dashboard" className="text-orange-500 hover:underline">
+          <a href="/sign-up" className="text-orange-500 hover:underline">
             Cadastre-se
           </a>
         </p>

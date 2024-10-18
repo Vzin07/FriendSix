@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,88 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model categoria {
+  CAT_CODIGO Int                @id @db.UnsignedInt
+  CAT_TIPO   categoria_CAT_TIPO
+  CAT_NOME   String             @db.VarChar(45)
+  eventos    eventos[]
+  grupo      grupo[]
+}
+
+model eventos {
+  EVE_CODIGO                      Int                    @unique(map: "EVE_CODIGO_UNIQUE") @db.UnsignedInt
+  EVE_DATA                        DateTime               @db.DateTime(0)
+  EVE_LOCAL                       String                 @db.VarChar(512)
+  EVE_NOME                        String                 @db.VarChar(45)
+  EVE_QUANTIDADE_DE_PARTICIPANTES Int
+  EVE_CAT_CODIGO                  Int                    @db.UnsignedInt
+  categoria                       categoria              @relation(fields: [EVE_CAT_CODIGO], references: [CAT_CODIGO], onDelete: NoAction, onUpdate: NoAction, map: "fk_EVENTO_CATEGORIA1")
+  grupos_dos_eventos              grupos_dos_eventos[]
+  usuarios_dos_eventos            usuarios_dos_eventos[]
+
+  @@id([EVE_CODIGO, EVE_CAT_CODIGO])
+  @@index([EVE_CAT_CODIGO], map: "fk_EVENTO_CATEGORIA1_idx")
+}
+
+model grupo {
+  GRU_CODIGO          Int                   @default(autoincrement()) @unique
+  GRU_NOME            String                @db.VarChar(45)
+  GRU_CAT_CODIGO      Int                   @db.UnsignedInt
+  categoria           categoria             @relation(fields: [GRU_CAT_CODIGO], references: [CAT_CODIGO], onDelete: NoAction, onUpdate: NoAction, map: "fk_GRUPO_CATEGORIA1")
+  grupos_dos_eventos  grupos_dos_eventos[]
+  usuarios_dos_grupos usuarios_dos_grupos[]
+
+  @@id([GRU_CODIGO, GRU_CAT_CODIGO])
+  @@index([GRU_CAT_CODIGO], map: "fk_GRUPO_CATEGORIA1_idx")
+}
+
+model grupos_dos_eventos {
+  GDE_EVE_CODIGO Int     @db.UnsignedInt
+  GDE_GRU_CODIGO Int
+  eventos        eventos @relation(fields: [GDE_EVE_CODIGO], references: [EVE_CODIGO], onDelete: NoAction, onUpdate: NoAction, map: "fk_EVENTOS_has_GRUPO_EVENTOS1")
+  grupo          grupo   @relation(fields: [GDE_GRU_CODIGO], references: [GRU_CODIGO], onDelete: NoAction, onUpdate: NoAction, map: "fk_EVENTOS_has_GRUPO_GRUPO1")
+
+  @@id([GDE_EVE_CODIGO, GDE_GRU_CODIGO])
+  @@index([GDE_EVE_CODIGO], map: "fk_EVENTOS_has_GRUPO_EVENTOS1_idx")
+  @@index([GDE_GRU_CODIGO], map: "fk_EVENTOS_has_GRUPO_GRUPO1_idx")
+}
+
+model usuarios {
+  USU_CODIGO           Int                    @id @unique(map: "USU_COD_UNIQUE") @default(autoincrement())
+  USU_TELEFONE         String?                 @unique(map: "USU_TELEFONE_UNIQUE") @db.VarChar(11)
+  USU_NOME             String                 @db.VarChar(60)
+  USU_SENHA            String                 @db.VarChar(100)
+  USU_EMAIL            String                 @unique(map: "USU_EMAIL_UNIQUE") @db.VarChar(256)
+  usuarios_dos_eventos usuarios_dos_eventos[]
+  usuarios_dos_grupos  usuarios_dos_grupos[]
+}
+
+model usuarios_dos_eventos {
+  UDE_USU_CODIGO Int
+  UDE_EVE_CODIGO Int      @db.UnsignedInt
+  eventos        eventos  @relation(fields: [UDE_EVE_CODIGO], references: [EVE_CODIGO], onDelete: NoAction, onUpdate: NoAction, map: "fk_USUARIO_has_EVENTO_EVENTO1")
+  usuarios       usuarios @relation(fields: [UDE_USU_CODIGO], references: [USU_CODIGO], onDelete: NoAction, onUpdate: NoAction, map: "fk_USUARIO_has_EVENTO_USUARIO1")
+
+  @@id([UDE_USU_CODIGO, UDE_EVE_CODIGO])
+  @@index([UDE_EVE_CODIGO], map: "fk_USUARIO_has_EVENTO_EVENTO1_idx")
+  @@index([UDE_USU_CODIGO], map: "fk_USUARIO_has_EVENTO_USUARIO1_idx")
+}
+
+model usuarios_dos_grupos {
+  UDG_USU_CODIGO Int
+  UDG_GRU_CODIGO Int
+  grupo          grupo    @relation(fields: [UDG_GRU_CODIGO], references: [GRU_CODIGO], onDelete: NoAction, onUpdate: NoAction, map: "fk_USUARIO_has_GRUPO_GRUPO1")
+  usuarios       usuarios @relation(fields: [UDG_USU_CODIGO], references: [USU_CODIGO], onDelete: NoAction, onUpdate: NoAction, map: "fk_USUARIO_has_GRUPO_USUARIO")
+
+  @@id([UDG_USU_CODIGO, UDG_GRU_CODIGO])
+  @@index([UDG_GRU_CODIGO], map: "fk_USUARIO_has_GRUPO_GRUPO1_idx")
+  @@index([UDG_USU_CODIGO], map: "fk_USUARIO_has_GRUPO_USUARIO_idx")
+}
+
+enum categoria_CAT_TIPO {
+  EVENTO
+  GRUPO
+  TODOS
 }

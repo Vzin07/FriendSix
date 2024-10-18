@@ -1,3 +1,4 @@
+import { PrismaClient } from '@prisma/client'
 import { NextAuthOptions, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
@@ -22,13 +23,15 @@ export const nextAuthOptions: NextAuthOptions = {
             },
             async authorize(credentials, req) {
                 try {
-                    const user = {
-                        id: '3e9f0db7-5ec1-49df-aa33-132eb2d52a9f',
-                        email: 'piluqukebu@mailinator.com',
-                        password: '12345678'
-                    }
+                    const prisma = new PrismaClient
 
-                    if (credentials!.email != user.email || credentials!.password != user.password) {
+                    const user = prisma.usuarios.findUnique({
+                        where: {
+                            USU_EMAIL: credentials!.email
+                        }
+                    })
+
+                    if (credentials!.email != user.USU_EMAIL || credentials!.password != user.password) {
                         return null
                     }
 
