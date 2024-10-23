@@ -1,3 +1,4 @@
+import { UserWithoutPassword } from '@/types'
 import { PrismaClient } from '@prisma/client'
 import { NextAuthOptions, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -23,21 +24,26 @@ export const nextAuthOptions: NextAuthOptions = {
             },
             async authorize(credentials, req) {
                 try {
-                    const prisma = new PrismaClient
+                    const prisma = new PrismaClient()
 
-                    const user = prisma.usuarios.findUnique({
+                    const user = await prisma.usuarios.findFirst({
                         where: {
                             USU_EMAIL: credentials!.email
                         }
                     })
 
-                    if (credentials!.email != user.USU_EMAIL || credentials!.password != user.password) {
+                    if (!user) {
                         return null
-                    }
+                      }
 
-                    const { password, ...rest } = user
+                    const loggedUser: any = user
 
-                    return rest as User
+                    loggedUser.id = user.USU_CODIGO
+                    delete loggedUser.USU_CODIGO
+
+                    const { USU_SENHA, ...rest } = loggedUser
+
+                    return rest
                 } catch (error) {
                     const errorMessage =
                         error instanceof Error ? error.message : 'An unknown error occurred'
@@ -61,10 +67,7 @@ export const nextAuthOptions: NextAuthOptions = {
             return token
         },
         async session({ session, token }) {
-            session.user = token.user as {
-                id: string,
-                email: string
-            }
+            session.user = token.user as UserWithoutPassword
 
             return session
         },

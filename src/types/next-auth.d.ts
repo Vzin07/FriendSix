@@ -1,8 +1,7 @@
-import { User } from 'next-auth'
-import { AuthUser } from '.'
+import { AuthUser, UserWithoutPassword } from '.'
 
 declare module 'next-auth' {
   interface Session {
-    user: User
+    user: UserWithoutPassword
   }
 }

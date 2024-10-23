@@ -1,5 +1,6 @@
 'use server'
 
+import { InitialState } from "@/types"
 import { PrismaClient, usuarios } from "@prisma/client"
 import { z } from "zod"
 

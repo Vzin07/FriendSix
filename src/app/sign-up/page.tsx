@@ -5,6 +5,7 @@ import { useFormState } from 'react-dom';
 import { signUp } from './actions';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { InitialState } from '@/types';
 
 const initialState: InitialState = {
   success: false,
