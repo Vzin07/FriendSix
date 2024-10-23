@@ -4,7 +4,7 @@ import { NextAuthOptions, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
 export const nextAuthOptions: NextAuthOptions = {
-    session: {
+    jwt: {
         maxAge: 8 * 60 * 60, // 8 hours
     },
     providers: [
@@ -67,7 +67,7 @@ export const nextAuthOptions: NextAuthOptions = {
             return token
         },
         async session({ session, token }) {
-            session.user = token.user as UserWithoutPassword
+            session.user = token.user as UserWithoutPassword & { id: string }
 
             return session
         },

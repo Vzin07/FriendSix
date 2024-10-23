@@ -1,7 +1,12 @@
+'use client'
+
 import Logo from "@/components/logo";
 import ComponetGrup from "@/components/grup";
+import { useSession } from "next-auth/react";
 
 export default function Dashboard() {
+  const { data: session, status } = useSession()
+
   return (
     <div className="w-full min-h-screen bg-orange-400">
       <div className="bg-black w-full h-20 flex justify-between items-center gap-9 shadow-black shadow-md">
@@ -40,7 +45,7 @@ export default function Dashboard() {
 
         <div className="flex items-center p-2 cursor-pointer">
           <h2 className="font-morsan text-gray-200 hover:text-blue-600 text-xl pr-1">
-            <strong>Username</strong>
+            <strong>{session?.user.id}</strong>
           </h2>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -111,8 +116,15 @@ export default function Dashboard() {
                 <h3 className="hover:underline cursor-pointer">Meus Eventos</h3>
               </div>
             </div>
-            <div className="p-3 flex justify-center ">
-              <ComponetGrup />
+            <div className="flex flex-col items-center w-full">
+              <div className="w-10/12 flex flex-col gap-2 mt-2">
+                <ComponetGrup />
+                <ComponetGrup />
+                <ComponetGrup />
+                <ComponetGrup />
+                <ComponetGrup />
+                
+              </div>
             </div>
           </div>
         </div>
