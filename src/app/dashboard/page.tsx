@@ -1,5 +1,6 @@
 'use client'
 
+import ConteudoPrincipal from "@/components/conteudo";
 import Logo from "@/components/logo";
 import ComponetGrup from "@/components/grup";
 import { useSession } from "next-auth/react";
@@ -45,7 +46,7 @@ export default function Dashboard() {
 
         <div className="flex items-center p-2 cursor-pointer">
           <h2 className="font-morsan text-gray-200 hover:text-blue-600 text-xl pr-1">
-            <strong>{session?.user.id}</strong>
+            <strong>{session?.user.USU_NOME}</strong>
           </h2>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -128,17 +129,18 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="w-9/12 border-2 border-solid border-black ">
-          <div className="p-2">
+        <div className="w-9/12 border-2 border-solid border-black flex ">
+          <div className="p-2 justify-start">
             <h1 className="font-morsan text-2xl text-black">MAIN</h1>
           </div>
+          <div className="flex w-full justify-end m-10">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="size-6 w-7 h-7 "
+            className="size-6 w-7 h-7 flex items-end"
           >
             <path
               strokeLinecap="round"
@@ -146,6 +148,12 @@ export default function Dashboard() {
               d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
             />
           </svg>
+
+          </div>
+
+          <div>
+            <ConteudoPrincipal />
+          </div>
         </div>
       </div>
     </div>
