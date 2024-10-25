@@ -4,6 +4,7 @@ import { NextAuthOptions, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
 export const nextAuthOptions: NextAuthOptions = {
+
     jwt: {
         maxAge: 8 * 60 * 60, // 8 hours
     },
@@ -24,6 +25,8 @@ export const nextAuthOptions: NextAuthOptions = {
             },
             async authorize(credentials, req) {
                 try {
+                    const argon2 = await import('argon2')
+
                     const prisma = new PrismaClient()
 
                     const user = await prisma.usuarios.findFirst({
@@ -40,6 +43,17 @@ export const nextAuthOptions: NextAuthOptions = {
 
                     loggedUser.id = user.USU_CODIGO
                     delete loggedUser.USU_CODIGO
+
+                    const salt = process.env.PASSWORD_SALT
+
+                    const passwordVerify = await argon2.verify( 
+                        loggedUser.USU_SENHA,
+                        credentials!.password + salt
+                    )
+
+                    if (!passwordVerify) {
+                        return null
+                    }
 
                     const { USU_SENHA, ...rest } = loggedUser
 

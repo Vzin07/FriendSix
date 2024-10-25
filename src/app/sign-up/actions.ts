@@ -6,6 +6,8 @@ import { z } from "zod"
 
 export async function signUp(prevState: InitialState, formData: FormData) {
     const prisma = new PrismaClient()
+
+    const argon2 = await import('argon2')
     
     const state = {
         success: true,
@@ -34,6 +36,10 @@ export async function signUp(prevState: InitialState, formData: FormData) {
 
         return state
     }
+
+    const salt = process.env.PASSWORD_SALT
+
+    data.password = await argon2.hash(data.password + salt)
 
     await prisma.usuarios.create({
         data: {
