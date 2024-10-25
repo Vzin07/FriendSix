@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import ConteudoPrincipal from "@/components/conteudo";
 import Logo from "@/components/logo";
@@ -6,7 +6,7 @@ import ComponetGrup from "@/components/grup";
 import { useSession } from "next-auth/react";
 
 export default function Dashboard() {
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSession();
 
   return (
     <div className="w-full min-h-screen bg-orange-400">
@@ -124,34 +124,37 @@ export default function Dashboard() {
                 <ComponetGrup />
                 <ComponetGrup />
                 <ComponetGrup />
-                
               </div>
             </div>
           </div>
         </div>
-        <div className="w-9/12 border-2 border-solid border-black flex ">
-          <div className="p-2 justify-start">
-            <h1 className="font-morsan text-2xl text-black">MAIN</h1>
-          </div>
-          <div className="flex w-full justify-end m-10">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6 w-7 h-7 flex items-end"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
-            />
-          </svg>
+        <div className="w-9/12 border-2 border-solid border-black h-screen ">
+          <div className="w-full h-1/6">
+            <div className="p-2 justify-start">
+              <h1 className="font-morsan text-2xl text-black">MAIN</h1>
+            <div className="flex w-full justify-end ">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6 w-7 h-7 flex items-end cursor-pointer mx-7"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
+                />
+              </svg>
+            </div>
+            </div>
 
           </div>
 
-          <div>
+          <div className="flex flex-col items-center h-5/6 ">
+            <ConteudoPrincipal />
+            <ConteudoPrincipal />
             <ConteudoPrincipal />
           </div>
         </div>
