@@ -4,6 +4,7 @@ import ConteudoPrincipal from "@/components/conteudo";
 import Logo from "@/components/logo";
 import ComponetGrup from "@/components/grup";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -65,20 +66,22 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="w-full h-screen flex ">
+      <div className="w-full h-screen flex">
         <div className="w-3/12 rounded-none border-2 border-solid border-black shadow-black shadow-lg">
           <div className="p-2 h-1/6">
             <h1 className="font-morsan text-2xl text-black pb-5">
               <strong>AÇÕES</strong>
             </h1>
-            <div className="p-y-8 flex cursor-pointer hover:underline items-center ">
+            <Link href={'/grupos'}>
+            
+            <div className="flex cursor-pointer bg-orange-300 hover:underline hover:bg-orange-700 items-center rounded-md mb-2 hover:shadow-sm hover:shadow-current">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="size-6 w-7 h-7"
+                className="size-6 w-7 h-7 ml-2"
               >
                 <path
                   strokeLinecap="round"
@@ -88,15 +91,16 @@ export default function Dashboard() {
               </svg>
               <h2 className="ps-2">Criar Grupos</h2>
             </div>
+            </Link>
 
-            <div className="pt-2 cursor-pointer hover:underline flex">
+            <div className="flex cursor-pointer bg-orange-300 hover:underline hover:bg-orange-700 items-center rounded-md hover:shadow-sm hover:shadow-current">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 w-7 h-7"
+                stroke="currentColor" 
+                className="size-6 w-7 h-7 ml-2"
               >
                 <path
                   strokeLinecap="round"
@@ -131,7 +135,7 @@ export default function Dashboard() {
         <div className="w-9/12 border-2 border-solid border-black h-screen ">
           <div className="w-full h-1/6">
             <div className="p-2 justify-start">
-              <h1 className="font-morsan text-2xl text-black">MAIN</h1>
+              <h1 className="font-morsan text-2xl text-black">FEED</h1>
             <div className="flex w-full justify-end ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

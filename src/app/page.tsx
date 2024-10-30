@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react"
 import { z } from "zod" 
 import { signIn as nextAuthSignIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
  function Login() {
   const [errors, setErrors] = useState({})
@@ -59,7 +60,9 @@ import { useRouter } from 'next/navigation';
       <div className="w-full max-w-md bg-orange-200 p-8 rounded-lg shadow-lg flex flex-col items-center">
         <div className='rounded-full bg-orange-500 w-20 flex flex-col justify-center items-center aspect-square p-2'>
 
-        <Logo title/>
+        <Link href={'/dashboard'}>
+          <Logo title/>
+        </Link>
         </div>
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
         <form onSubmit={handleSubmit} className='w-full'>
