@@ -10,9 +10,8 @@ export async function insertCategories(
         },
         {
             id: 2,
-            name: 'Jogo',
+            name: 'Música',
         }
-
     ]
 
 
