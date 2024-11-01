@@ -5,9 +5,40 @@ import Logo from "@/components/logo";
 import ComponetGrup from "@/components/grup";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useState } from "react";
+import { useFormState } from "react-dom";
+import { InitialState } from "@/types";
+import { createGroup } from "../grupos/actions";
+
+const initialState: InitialState = {
+  success: false,
+  errors: {},
+};
+
+const categorias = [
+  { id: 1, name: "Categoria 1" },
+  { id: 2, name: "Categoria 2" },
+  { id: 3, name: "Categoria 3" },
+  { id: 4, name: "Categoria 4" },
+];
 
 export default function Dashboard() {
+  const [state, formAction] = useFormState(createGroup, initialState);
   const { data: session, status } = useSession();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [closeModel, setCloseModel] = useState(true)
+  
+  const closeModal = () => setIsModalOpen(true)
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen)
+    setCloseModel(false)
+  };
+
+  window.addEventListener('click', (event) => {
+    if (isModalOpen && closeModel) {
+      setIsModalOpen(false)
+    }
+  });
 
   return (
     <div className="w-full min-h-screen bg-orange-400">
@@ -26,8 +57,8 @@ export default function Dashboard() {
             type="text"
             className="pl-10 p-2 border border-gray-300 rounded-md w-full md:w-96 h-8"
             placeholder="Pesquisar"
+            aria-label="Pesquisar conteúdo"
             id="pesquisa"
-            name=""
           />
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +78,7 @@ export default function Dashboard() {
 
         <div className="flex items-center p-2 cursor-pointer">
           <h2 className="font-morsan text-gray-200 hover:text-blue-600 text-xl pr-1">
-            <strong>{session?.user.USU_NOME}</strong>
+            <strong>{session?.user.USU_NOME || "Usuário"}</strong>
           </h2>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -72,9 +103,11 @@ export default function Dashboard() {
             <h1 className="font-morsan text-2xl text-black pb-5">
               <strong>AÇÕES</strong>
             </h1>
-            <Link href={'/grupos'}>
-            
-            <div className="flex cursor-pointer bg-orange-300 hover:underline hover:bg-orange-700 items-center rounded-md mb-2 hover:shadow-sm hover:shadow-current">
+
+            <div
+              onClick={toggleModal}
+              className="flex cursor-pointer bg-orange-300 hover:underline hover:bg-orange-700 items-center rounded-md mb-2 hover:shadow-sm hover:shadow-current"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -86,12 +119,11 @@ export default function Dashboard() {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+                  d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-5.216-.584-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
                 />
               </svg>
               <h2 className="ps-2">Criar Grupos</h2>
             </div>
-            </Link>
 
             <div className="flex cursor-pointer bg-orange-300 hover:underline hover:bg-orange-700 items-center rounded-md hover:shadow-sm hover:shadow-current">
               <svg
@@ -99,7 +131,7 @@ export default function Dashboard() {
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
-                stroke="currentColor" 
+                stroke="currentColor"
                 className="size-6 w-7 h-7 ml-2"
               >
                 <path
@@ -136,24 +168,23 @@ export default function Dashboard() {
           <div className="w-full h-1/6">
             <div className="p-2 justify-start">
               <h1 className="font-morsan text-2xl text-black">FEED</h1>
-            <div className="flex w-full justify-end ">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 w-7 h-7 flex items-end cursor-pointer mx-7"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
-                />
-              </svg>
+              <div className="flex w-full justify-end ">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6 w-7 h-7 flex items-end cursor-pointer mx-7"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
+                  />
+                </svg>
+              </div>
             </div>
-            </div>
-
           </div>
 
           <div className="flex flex-col items-center h-5/6 ">
@@ -162,6 +193,65 @@ export default function Dashboard() {
             <ConteudoPrincipal />
           </div>
         </div>
+
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="w-full max-w-md bg-orange-200 p-8 rounded-lg shadow-lg flex flex-col items-center">
+              <div className="rounded-full bg-orange-500 w-20 flex flex-col justify-center items-center aspect-square ">
+                <Logo title />
+              </div>
+              <h2 className="text-2xl font-bold text-center mb-6">
+                Criar Grupo
+              </h2>
+              <form action={formAction} className="w-full">
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="name"
+                  >
+                    Nome do Grupo
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-600"
+                    placeholder="Digite seu nome"
+                    required
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="categoria"
+                  >
+                    Categoria
+                  </label>
+                  <select
+                    name="categoria"
+                    id="categoria"
+                    className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    required
+                  >
+                    {categorias.map((categoria) => (
+                      <option value={categoria.id} key={categoria.id}>
+                        {categoria.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                >
+                  Criar Grupo
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
