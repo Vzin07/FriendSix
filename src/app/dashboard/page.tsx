@@ -4,38 +4,32 @@ import ConteudoPrincipal from "@/components/conteudo";
 import Logo from "@/components/logo";
 import ComponetGrup from "@/components/grup";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useFormState } from "react-dom";
 import { InitialState } from "@/types";
+import { useFormState } from "react-dom";
 import { createGroup } from "./actions";
-import { Category } from "@prisma/client";
 import getCategories from "../actions";
+import { Category } from "@prisma/client";
 
 const initialState: InitialState = {
   success: false,
   errors: {},
 };
 
-const categorias = [
-  { id: 1, name: "Categoria 1" },
-  { id: 2, name: "Categoria 2" },
-  { id: 3, name: "Categoria 3" },
-  { id: 4, name: "Categoria 4" },
-];
-
 export default function Dashboard() {
-  const [state, formAction] = useFormState(createGroup, initialState);
   const { data: session, status } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [closeModel, setCloseModel] = useState(true)
-  const [categories, setCategories] = useState<Category[]>([])
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  const closeModal = () => setIsModalOpen(true)
+  const [state, formAction] = useFormState(createGroup, initialState)
+
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen)
-    setCloseModel(false)
   };
+ 
+  const xModal = () => {
+    setIsModalOpen(!isModalOpen)
+  }
 
   useEffect(() => {
     const categories = async () => {
@@ -44,12 +38,6 @@ export default function Dashboard() {
 
     categories()
   }, [])
-
-  // window.addEventListener('click', (event) => {
-  //   if (isModalOpen && closeModel) {
-  //     setIsModalOpen(false)
-  //   }
-  // });
 
   return (
     <div className="w-full min-h-screen bg-orange-400">
@@ -199,12 +187,6 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col items-center h-5/6 ">
-            <select name="" id="">
-              {categories.map((category, index) => (
-                <option key={index} value={category.id}>{category.name}</option>
-              ))}
-            </select>
-
             <ConteudoPrincipal />
             <ConteudoPrincipal />
             <ConteudoPrincipal />
@@ -213,7 +195,10 @@ export default function Dashboard() {
 
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="w-full max-w-md bg-orange-200 p-8 rounded-lg shadow-lg flex flex-col items-center">
+            <div className="w-full max-w-md bg-orange-200 p-8 rounded-lg shadow-lg flex flex-col items-center relative">
+              <div
+              onClick={xModal} 
+              className="flex flex-col  cursor-pointer absolute top-0 right-0 p-2">X</div>
               <div className="rounded-full bg-orange-500 w-20 flex flex-col justify-center items-center aspect-square ">
                 <Logo title />
               </div>
@@ -251,8 +236,8 @@ export default function Dashboard() {
                     className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                     required
                   >
-                    {categorias.map((categoria) => (
-                      <option value={categoria.id} key={categoria.id}>
+                    {categories.map((categoria, index) => (
+                      <option value={categoria.id} key={index}>
                         {categoria.name}
                       </option>
                     ))}
