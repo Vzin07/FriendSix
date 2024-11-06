@@ -1,10 +1,9 @@
 import { UserWithoutPassword } from '@/types'
 import { PrismaClient } from '@prisma/client'
-import { NextAuthOptions, User } from 'next-auth'
+import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
 export const nextAuthOptions: NextAuthOptions = {
-
     jwt: {
         maxAge: 8 * 60 * 60, // 8 hours
     },
@@ -29,25 +28,20 @@ export const nextAuthOptions: NextAuthOptions = {
 
                     const prisma = new PrismaClient()
 
-                    const user = await prisma.usuarios.findFirst({
+                    const user = await prisma.user.findFirst({
                         where: {
-                            USU_EMAIL: credentials!.email
+                            email: credentials!.email
                         }
                     })
 
                     if (!user) {
                         return null
-                      }
-
-                    const loggedUser: any = user
-
-                    loggedUser.id = user.USU_CODIGO
-                    delete loggedUser.USU_CODIGO
+                    }
 
                     const salt = process.env.PASSWORD_SALT
 
-                    const passwordVerify = await argon2.verify( 
-                        loggedUser.USU_SENHA,
+                    const passwordVerify = await argon2.verify(
+                        user.password,
                         credentials!.password + salt
                     )
 
@@ -55,7 +49,7 @@ export const nextAuthOptions: NextAuthOptions = {
                         return null
                     }
 
-                    const { USU_SENHA, ...rest } = loggedUser
+                    const { password, ...rest } = user
 
                     return rest
                 } catch (error) {
@@ -81,7 +75,7 @@ export const nextAuthOptions: NextAuthOptions = {
             return token
         },
         async session({ session, token }) {
-            session.user = token.user as UserWithoutPassword & { id: string }
+            session.user = token.user as UserWithoutPassword
 
             return session
         },

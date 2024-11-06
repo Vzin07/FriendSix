@@ -1,15 +1,15 @@
-import { categoria_CAT_TIPO, Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 
 export async function insertCategories(
     prisma: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>) {
     const categories = [
         {
-            id: 1,
+            id: 'f49b988e-bf46-4a5d-811a-51c3ff03276a',
             name: 'Esporte',
         },
         {
-            id: 2,
+            id: '8bcd0f15-6c12-48ea-aba4-f229f30f56e9',
             name: 'Música',
         }
     ]
@@ -18,13 +18,13 @@ export async function insertCategories(
     console.log('Seeding categories...');
 
     for (const category of categories) {
-        await prisma.categoria.upsert({
-            where: { CAT_CODIGO: category.id },
+        await prisma.category.upsert({
+            where: { id: category.id },
             update: {},
             create: {
-                CAT_CODIGO: category.id,
-                CAT_NOME: category.name,
-                CAT_TIPO: 'GRUPO'
+                id: category.id,
+                name: category.name,
+                type: 'GRUPO'
             },
         });
     }

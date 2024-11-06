@@ -8,7 +8,7 @@ export async function createGroup(prevState: InitialState, formData: FormData) {
     console.log(formData)
 
     const prisma = new PrismaClient()
-    
+
     const state = {
         success: true,
         errors: {}
@@ -16,14 +16,14 @@ export async function createGroup(prevState: InitialState, formData: FormData) {
 
     const schema = z.object({
         name: z.string().max(90, "Nome deve ter até 90 caracteres.").min(4, "nome deve ter no mínimo 4 caracteres"),
-        categoria: z.coerce.number()
+        categoryId: z.string().uuid()
     })
 
-    type Grupo = z.infer<typeof schema>
+    type Group = z.infer<typeof schema>
 
-    const data: Grupo = {
+    const data: Group = {
         name: formData.get('name') as string,
-        categoria: Number(formData.get('categoria') as string),
+        categoryId: formData.get('categoria') as string,
     }
 
     const validatedFields = schema.safeParse(data)
@@ -35,12 +35,12 @@ export async function createGroup(prevState: InitialState, formData: FormData) {
         return state
     }
 
-    await prisma.grupo.create({
+    await prisma.group.create({
         data: {
-            GRU_NOME: data.name,
-            GRU_CAT_CODIGO: data.categoria
+            name: data.name,
+            categoryId: data.categoryId
         }
     })
-    
+
     return state
 }

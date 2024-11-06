@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `usuarios` MODIFY `USU_TELEFONE` VARCHAR(11) NULL;

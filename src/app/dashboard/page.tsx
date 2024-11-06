@@ -5,10 +5,12 @@ import Logo from "@/components/logo";
 import ComponetGrup from "@/components/grup";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { InitialState } from "@/types";
-import { createGroup } from "../grupos/actions";
+import { createGroup } from "./actions";
+import { Category } from "@prisma/client";
+import getCategories from "../actions";
 
 const initialState: InitialState = {
   success: false,
@@ -27,18 +29,27 @@ export default function Dashboard() {
   const { data: session, status } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [closeModel, setCloseModel] = useState(true)
-  
+  const [categories, setCategories] = useState<Category[]>([])
+
   const closeModal = () => setIsModalOpen(true)
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen)
     setCloseModel(false)
   };
 
-  window.addEventListener('click', (event) => {
-    if (isModalOpen && closeModel) {
-      setIsModalOpen(false)
+  useEffect(() => {
+    const categories = async () => {
+      setCategories(await getCategories("GRUPO"))
     }
-  });
+
+    categories()
+  }, [])
+
+  // window.addEventListener('click', (event) => {
+  //   if (isModalOpen && closeModel) {
+  //     setIsModalOpen(false)
+  //   }
+  // });
 
   return (
     <div className="w-full min-h-screen bg-orange-400">
@@ -78,7 +89,7 @@ export default function Dashboard() {
 
         <div className="flex items-center p-2 cursor-pointer">
           <h2 className="font-morsan text-gray-200 hover:text-blue-600 text-xl pr-1">
-            <strong>{session?.user.USU_NOME || "Usuário"}</strong>
+            <strong>{session?.user.name || "Usuário"}</strong>
           </h2>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -188,6 +199,12 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col items-center h-5/6 ">
+            <select name="" id="">
+              {categories.map((category, index) => (
+                <option key={index} value={category.id}>{category.name}</option>
+              ))}
+            </select>
+
             <ConteudoPrincipal />
             <ConteudoPrincipal />
             <ConteudoPrincipal />
