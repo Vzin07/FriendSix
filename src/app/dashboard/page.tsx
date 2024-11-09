@@ -39,6 +39,12 @@ export default function Dashboard() {
     categories()
   }, [])
 
+  useEffect(() => {
+    if (state.success == true) {
+      setIsModalOpen(false)
+    }
+  }, [state.success])
+
   return (
     <div className="w-full min-h-screen bg-orange-400">
       <div className="bg-black w-full h-20 flex justify-between items-center gap-9 shadow-black shadow-md">
