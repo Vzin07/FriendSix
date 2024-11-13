@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 import { InitialState } from "@/types";
 import { useFormState } from "react-dom";
 import { createGroup } from "./actions";
-import getCategories from "../actions";
-import { Category } from "@prisma/client";
+import { getCategories, getGroups } from "../actions";
+import { Category, Group, UsersOnGroups } from "@prisma/client";
 
 const initialState: InitialState = {
   success: false,
@@ -20,6 +20,7 @@ export default function Dashboard() {
   const { data: session, status } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [groups, setGroups] = useState<Group[]>([])
 
   const [state, formAction] = useFormState(createGroup, initialState)
 
@@ -36,12 +37,23 @@ export default function Dashboard() {
       setCategories(await getCategories("GRUPO"))
     }
 
+    const groups = async () => {
+      setGroups(await getGroups())
+    }
+
     categories()
+    groups()
   }, [])
 
   useEffect(() => {
+    const groups = async () => {
+      setGroups(await getGroups())
+    }
+
     if (state.success == true) {
       setIsModalOpen(false)
+
+      groups()
     }
   }, [state.success])
 
@@ -160,11 +172,9 @@ export default function Dashboard() {
             </div>
             <div className="flex flex-col items-center w-full">
               <div className="w-10/12 flex flex-col gap-2 mt-2">
-                <ComponetGrup />
-                <ComponetGrup />
-                <ComponetGrup />
-                <ComponetGrup />
-                <ComponetGrup />
+                {groups.map((group, index) => (
+                  <ComponetGrup name={group.name} key={index} />
+                ))}
               </div>
             </div>
           </div>

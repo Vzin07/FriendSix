@@ -1,7 +1,9 @@
 'use server'
 
+import { nextAuthOptions } from "@/lib/utils"
 import { InitialState } from "@/types"
 import { PrismaClient } from "@prisma/client"
+import { getServerSession } from "next-auth"
 import { z } from "zod"
 
 export async function createGroup(prevState: InitialState, formData: FormData) {
@@ -35,10 +37,18 @@ export async function createGroup(prevState: InitialState, formData: FormData) {
         return state
     }
 
+    const user = (await getServerSession(nextAuthOptions))!.user
+
     await prisma.group.create({
         data: {
             name: data.name,
-            categoryId: data.categoryId
+            categoryId: data.categoryId,
+            users: {
+                create: {
+                    owner: true,
+                    userId: user.id,
+                }
+            }
         }
     })
 
