@@ -54,3 +54,59 @@ export async function createGroup(prevState: InitialState, formData: FormData) {
 
     return state
 }
+
+export async function createEvent(prevState: InitialState, formData: FormData) {
+    console.log(formData)
+
+    const prisma = new PrismaClient()
+
+    const state = {
+        success: true,
+        errors: {}
+    }
+
+    const schema = z.object({
+        name: z.string().max(90, "Nome deve ter até 90 caracteres.").min(4, "nome deve ter no mínimo 4 caracteres"),
+        categoryId: z.string().uuid(),
+        date: z.string().datetime(),
+        location: z.string()
+    })
+
+    type Event = z.infer<typeof schema>
+
+    const data: Event = {
+        name: formData.get('name') as string,
+        categoryId: formData.get('categoria') as string,
+        date: formData.get('data') as string,
+        location: formData.get('localização') as string,
+
+    }
+
+    const validatedFields = schema.safeParse(data)
+
+    if (!validatedFields.success) {
+        state.success = false
+        state.errors = validatedFields.error.flatten().fieldErrors
+
+        return state
+    }
+
+    const user = (await getServerSession(nextAuthOptions))!.user
+
+    await prisma.event.create({
+        data: {
+            name: data.name,
+            categoryId: data.categoryId,
+            date: data.date,
+            location: data.location,
+            users: {
+                create: {
+                    owner: true,
+                    userId: user.id,
+                }
+            }
+        }
+    })
+
+    return state
+}

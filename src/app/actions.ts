@@ -35,3 +35,23 @@ export async function getGroups() {
 
     return groups
 }
+
+export async function getEvent() {
+    const prisma = new PrismaClient()
+
+    const user = (await getServerSession(nextAuthOptions))!.user
+
+    const events = await prisma.event.findMany({
+        where: {
+            users: {
+                some: {
+                    userId: user.id
+                }
+            },
+        }
+    })
+
+    console.log(events)
+
+    return events
+}
