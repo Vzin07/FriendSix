@@ -68,7 +68,7 @@ export async function createEvent(prevState: InitialState, formData: FormData) {
     const schema = z.object({
         name: z.string().max(90, "Nome deve ter até 90 caracteres.").min(4, "nome deve ter no mínimo 4 caracteres"),
         categoryId: z.string().uuid(),
-        date: z.string().datetime(),
+        date: z.string().datetime({ local: true }),
         location: z.string()
     })
 
@@ -77,17 +77,20 @@ export async function createEvent(prevState: InitialState, formData: FormData) {
     const data: Event = {
         name: formData.get('name') as string,
         categoryId: formData.get('categoria') as string,
-        date: formData.get('data') as string,
-        location: formData.get('localização') as string,
+        date: formData.get('datetime') as string + ":00Z",
+        location: formData.get('local') as string,
 
     }
 
     const validatedFields = schema.safeParse(data)
 
+
+
     if (!validatedFields.success) {
         state.success = false
         state.errors = validatedFields.error.flatten().fieldErrors
 
+        console.log(state)
         return state
     }
 
@@ -107,6 +110,7 @@ export async function createEvent(prevState: InitialState, formData: FormData) {
             }
         }
     })
+
 
     return state
 }

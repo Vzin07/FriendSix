@@ -36,7 +36,7 @@ export async function getGroups() {
     return groups
 }
 
-export async function getEvent() {
+export async function getEvents() {
     const prisma = new PrismaClient()
 
     const user = (await getServerSession(nextAuthOptions))!.user

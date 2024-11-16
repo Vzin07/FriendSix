@@ -16,6 +16,7 @@ model User {
 
   events UsersOnEvents[]
   groups UsersOnGroups[]
+  posts  Post[]
 
   @@map("users")
 }
@@ -30,6 +31,7 @@ model Event {
   categoryId String   @map("category_id")
 
   users UsersOnEvents[]
+  posts Post[]
 
   @@map("events")
 }
@@ -42,8 +44,25 @@ model Group {
   categoryId String   @map("category_id")
 
   users UsersOnGroups[]
+  posts Post[]
 
   @@map("groups")
+}
+
+model Post {
+  id String @id @default(uuid())
+
+  photo       String? @db.LongText
+  title       String  @db.VarChar(45)
+  description String  @db.VarChar(1024)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  events Event[]
+  groups Group[]
+
+  @@map("post")
 }
 
 model Category {

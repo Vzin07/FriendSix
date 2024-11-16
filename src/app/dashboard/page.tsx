@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 import { InitialState } from "@/types";
 import { useFormState } from "react-dom";
 import { createEvent, createGroup } from "./actions";
-import { getCategories, getGroups } from "../actions";
-import { Category, Group, UsersOnGroups } from "@prisma/client";
+import { getCategories, getEvents, getGroups } from "../actions";
+import { Category, Event, Group, UsersOnGroups } from "@prisma/client";
 
 const initialState: InitialState = {
   success: false,
@@ -20,11 +20,15 @@ export default function Dashboard() {
   const { data: session, status } = useSession();
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const [isModalOpenEvent, setIsModalOpenEvent] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [groupCategories, setGroupCategories] = useState<Category[]>([]);
+  const [eventCategories, setEventCategories] = useState<Category[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
+  const [events, setEvents] = useState<Event[]>([])
 
-  //const [state, formAction] = useFormState(createGroup, initialState);
-  const [state, formAction] = useFormState(createEvent, initialState);
+  const [state, formAction] = useFormState(createGroup, initialState);
+  const [state2, formAction2] = useFormState(createEvent, initialState);
+
+  const [toggle, setToggle] = useState(true)
 
   const toggleModalGroups = () => {
     setIsModalOpenGroup(!isModalOpenGroup);
@@ -44,7 +48,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const categories = async () => {
-      setCategories(await getCategories("GRUPO"));
+      setGroupCategories(await getCategories("GRUPO"));
     };
 
     const groups = async () => {
@@ -56,6 +60,19 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
+    const categories = async () => {
+      setEventCategories(await getCategories("EVENTO"));
+    };
+
+    const events = async () => {
+      setEvents(await getEvents());
+    };
+
+    categories();
+    events();
+  }, []);
+
+  useEffect(() => {
     const groups = async () => {
       setGroups(await getGroups());
     };
@@ -64,6 +81,18 @@ export default function Dashboard() {
       setIsModalOpenGroup(false);
 
       groups();
+    }
+  }, [state.success]);
+
+  useEffect(() => {
+    const events = async () => {
+      setEvents(await getEvents());
+    };
+
+    if (state2.success == true) {
+      setIsModalOpenEvent(false);
+
+      events();
     }
   }, [state.success]);
 
@@ -177,16 +206,24 @@ export default function Dashboard() {
           <div className="w-full h-5/6 border-black border-solid border-b-2">
             <div className="h-8 w-full flex justify-center items-center text-center">
               <div className="border-black border-solid border-y-2 border-e-2 w-6/12 pl-2 hover:bg-orange-600">
-                <h3 className="hover:underline cursor-pointer">Meus Grupos</h3>
+                <h3 className="hover:underline cursor-pointer" onClick={() => setToggle(true)}>Meus Grupos</h3>
               </div>
               <div className="w-6/12 border-black border-solid border-2 border-s-0 border-e-0 pl-2 hover:bg-orange-600">
-                <h3 className="hover:underline cursor-pointer">Meus Eventos</h3>
+                <h3 className="hover:underline cursor-pointer" onClick={() => setToggle(false)}>Meus Eventos</h3>
               </div>
             </div>
-            <div className="flex flex-col items-center w-full">
+            <div className={`${toggle ? 'flex flex-col items-center w-full' : 'hidden'}`}>
               <div className="w-10/12 flex flex-col gap-2 mt-2">
                 {groups.map((group, index) => (
                   <ComponetGrup name={group.name} key={index} />
+                ))}
+              </div>
+            </div>
+
+            <div className={`${!toggle ? 'flex flex-col items-center w-full' : 'hidden'}`}>
+              <div className="w-10/12 flex flex-col gap-2 mt-2">
+                {events.map((event, index) => (
+                  <ComponetGrup name={event.name} key={index} />
                 ))}
               </div>
             </div>
@@ -268,7 +305,7 @@ export default function Dashboard() {
                     className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                     required
                   >
-                    {categories.map((categoria, index) => (
+                    {groupCategories.map((categoria, index) => (
                       <option value={categoria.id} key={index}>
                         {categoria.name}
                       </option>
@@ -302,7 +339,7 @@ export default function Dashboard() {
               <h2 className="text-2xl font-bold text-center mb-6">
                 Criar Evento
               </h2>
-              <form action={formAction} className="w-full">
+              <form action={formAction2} className="w-full">
                 <div className="mb-4">
                   <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -333,7 +370,7 @@ export default function Dashboard() {
                     className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                     required
                   >
-                    {categories.map((categoria, index) => (
+                    {eventCategories.map((categoria, index) => (
                       <option value={categoria.id} key={index}>
                         {categoria.name}
                       </option>
