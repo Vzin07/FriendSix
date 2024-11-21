@@ -9,7 +9,14 @@ export async function getCategories(categoriesType: CATEGORY_TYPE) {
 
     const categories = await prisma.category.findMany({
         where: {
-            type: categoriesType
+            OR: [
+                {
+                    type: categoriesType
+                },
+                {
+                    type: 'AMBOS'
+                }
+            ]
         }
     })
 
