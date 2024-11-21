@@ -8,68 +8,59 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(uuid())
-  name      String  @db.VarChar(90)
-  email     String  @unique @db.VarChar(255)
-  cellPhone String? @unique @map("cell_phone") @db.VarChar(11)
+  id        String          @id @default(uuid())
+  name      String          @db.VarChar(90)
+  email     String          @unique @db.VarChar(255)
+  cellPhone String?         @unique @map("cell_phone") @db.VarChar(11)
   password  String
-
-  events UsersOnEvents[]
-  groups UsersOnGroups[]
-  posts  Post[]
+  events    UsersOnEvents[]
+  groups    UsersOnGroups[]
+  posts     Post[]
 
   @@map("users")
 }
 
 model Event {
-  id       String   @id @default(uuid())
-  date     DateTime @db.DateTime()
-  location String
-  name     String   @db.VarChar(45)
-
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId String   @map("category_id")
-
-  users UsersOnEvents[]
-  posts Post[]
+  id         String          @id @default(uuid())
+  date       DateTime        @db.DateTime()
+  location   String
+  name       String          @db.VarChar(45)
+  category   Category        @relation(fields: [categoryId], references: [id])
+  categoryId String          @map("category_id")
+  users      UsersOnEvents[]
+  posts      Post[]          @relation("posts_on_events")
 
   @@map("events")
 }
 
 model Group {
-  id   String @id @default(uuid())
-  name String @db.VarChar(45)
-
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId String   @map("category_id")
-
-  users UsersOnGroups[]
-  posts Post[]
+  id         String          @id @default(uuid())
+  name       String          @db.VarChar(45)
+  category   Category        @relation(fields: [categoryId], references: [id])
+  categoryId String          @map("category_id")
+  users      UsersOnGroups[]
+  posts      Post[]          @relation("posts_on_groups")
 
   @@map("groups")
 }
 
 model Post {
-  id String @id @default(uuid())
-
+  id          String  @id @default(uuid())
   photo       String? @db.LongText
   title       String  @db.VarChar(45)
   description String  @db.VarChar(1024)
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
-
-  events Event[]
-  groups Group[]
+  user        User    @relation(fields: [userId], references: [id])
+  userId      String  @map("user_id")
+  events      Event[] @relation("posts_on_events")
+  groups      Group[] @relation("posts_on_groups")
 
   @@map("post")
 }
 
 model Category {
-  id   String        @id @default(uuid())
-  name String
-  type CATEGORY_TYPE
-
+  id     String        @id @default(uuid())
+  name   String
+  type   CATEGORY_TYPE
   events Event[]
   groups Group[]
 
@@ -77,26 +68,22 @@ model Category {
 }
 
 model UsersOnEvents {
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
-
-  event   Event  @relation(fields: [eventId], references: [id])
-  eventId String @map("event_id")
-
-  owner Boolean @default(false)
+  user    User    @relation(fields: [userId], references: [id])
+  userId  String  @map("user_id")
+  event   Event   @relation(fields: [eventId], references: [id])
+  eventId String  @map("event_id")
+  owner   Boolean @default(false)
 
   @@id([userId, eventId])
   @@map("users_on_events")
 }
 
 model UsersOnGroups {
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
-
-  group   Group  @relation(fields: [groupId], references: [id])
-  groupId String @map("group_id")
-
-  owner Boolean @default(false)
+  user    User    @relation(fields: [userId], references: [id])
+  userId  String  @map("user_id")
+  group   Group   @relation(fields: [groupId], references: [id])
+  groupId String  @map("group_id")
+  owner   Boolean @default(false)
 
   @@id([userId, groupId])
   @@map("users_on_groups")
