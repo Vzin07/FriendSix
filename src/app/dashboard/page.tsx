@@ -9,7 +9,7 @@ import { InitialState } from "@/types";
 import { useFormState } from "react-dom";
 import { createEvent, createGroup } from "./actions";
 import { getCategories, getEvents, getGroups } from "../actions";
-import { Category, Event, Group, UsersOnGroups } from "@prisma/client";
+import { Category, Event, Group } from "@prisma/client";
 
 const initialState: InitialState = {
   success: false,

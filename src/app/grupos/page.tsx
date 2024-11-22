@@ -4,6 +4,7 @@ import Logo from '@/components/logo';
 import { useFormState } from 'react-dom';
 import { createGroup } from '../dashboard/actions';
 import { InitialState } from '@/types';
+import { any } from 'zod';
 
 const initialState: InitialState = {
   success: false,
@@ -16,6 +17,20 @@ const categorias = [
   { id: 3, name: 'Categoria 3' },
   { id: 4, name: 'Categoria 4' }
 ];
+
+const creatBase64 = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    
+    reader.onloadend = () => {
+      let base64: string = reader.result as string
+      console.log(base64)
+    };
+  }
+};
 
 function CriarGrupos() {
   const [state, formAction] = useFormState(createGroup, initialState);
@@ -65,6 +80,12 @@ function CriarGrupos() {
             Criar Grupo
           </button>
         </form>
+
+        <div>
+          <input type="file" onChange={creatBase64} />
+          <img id='image' alt="Uploaded Image"></img>
+        </div>
+
       </div>
     </div>
   );

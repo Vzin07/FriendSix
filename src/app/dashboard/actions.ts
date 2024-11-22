@@ -78,7 +78,7 @@ export async function createEvent(prevState: InitialState, formData: FormData) {
         name: formData.get('name') as string,
         categoryId: formData.get('categoria') as string,
         date: formData.get('datetime') as string + ":00Z",
-        location: formData.get('local') as string,
+        location: formData.get('local') as string
 
     }
 
@@ -111,6 +111,55 @@ export async function createEvent(prevState: InitialState, formData: FormData) {
         }
     })
 
+
+    return state
+}
+
+export async function createPost(prevState: InitialState, formData: FormData) {
+    console.log(formData)
+
+    const prisma = new PrismaClient()
+
+    const state = {
+        success: true,
+        errors: {}
+    }
+
+    const schema = z.object({
+        photo: z.string(),
+        title: z.string().max(45),
+        description: z.string().max(1024)
+    })
+
+    type Event = z.infer<typeof schema>
+
+    const data: Event = {
+        photo: formData.get('photo') as string,
+        title: formData.get('name') as string,
+        description: formData.get('name') as string
+    }
+    
+    const validatedFields = schema.safeParse(data)
+
+    if (!validatedFields.success) {
+        state.success = false
+        state.errors = validatedFields.error.flatten().fieldErrors
+
+        console.log(state)
+        return state
+    }
+
+    const user = (await getServerSession(nextAuthOptions))!.user
+
+    await prisma.post.create({
+        data: {
+            photo: data.photo,
+            title: data.title,
+            description: data.description,
+            userId: user.id,
+            
+        }
+    })
 
     return state
 }
