@@ -1,23 +1,54 @@
 "use client";
 
-import Home from "@/components/home";
+import { getGroupById } from "@/app/actions";
+import { useEffect, useState } from "react";
 import ConteudoPrincipal from "@/components/conteudo";
 import Logo from "@/components/logo";
 import ComponetGrup from "@/components/grup";
-import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { InitialState } from "@/types";
 import { useFormState } from "react-dom";
 import { createEvent, createGroup } from "./actions";
-import { getCategories, getEvents, getGroups } from "../actions";
+import { getCategories, getEvents, getGroups } from "@/app/actions";
 import { Category, Event, Group } from "@prisma/client";
 import Link from "next/link";
 
 const initialState: InitialState = {
-  success: false,
-  errors: {},
-};
+    success: false,
+    errors: {},
+  };
 
-export default function Dashboard() {
+export default function Page({ params }: { params: { slug: string } }) {
+  const [group, setGroup] = useState<
+    | ({
+        users: ({
+          user: {
+            name: string;
+          };
+        } & {
+          owner: boolean;
+          userId: string;
+          groupId: string;
+        })[];
+      } & {
+        id: string;
+        name: string;
+        categoryId: string;
+      })
+    | null
+  >();
+
+  useEffect(() => {
+    const getGroup = async () => {
+      const groupData = await getGroupById(params.slug);
+
+      setGroup(groupData);
+    };
+
+    getGroup();
+  }, [params.slug]);
+
+  const { data: session } = useSession();
   const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
   const [isModalOpenEvent, setIsModalOpenEvent] = useState(false);
   const [groupCategories, setGroupCategories] = useState<Category[]>([]);
@@ -94,14 +125,64 @@ export default function Dashboard() {
 
       events();
     }
-  }, [state.success, state2.success]);
-
+  }, [state.success]);
   return (
+    <div>
     <div className="w-full min-h-screen bg-orange-400">
-      
-      <Home></Home>
+      <div className="bg-black w-full h-20 flex justify-between items-center gap-9 shadow-black shadow-md">
+        <div className="flex justify-start items-center">
+          <h1 className="text-white text-2xl mx-2 font-morsan justify-center flex-col">
+            <strong>FriendSix</strong>
+          </h1>
 
+          <div className="w-16 h-16 aspect-square bg-orange-500 rounded-full flex flex-col justify-center items-center">
+            <Logo title />
+          </div>
+        </div>
+        <div className="flex items-center p-2 relative">
+          <input
+            type="text"
+            className="pl-10 p-2 border border-gray-300 rounded-md w-full md:w-96 h-8"
+            placeholder="Pesquisar"
+            aria-label="Pesquisar conteúdo"
+            id="pesquisa"
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-5 h-5 absolute left-3 top-3.5 text-gray-500 cursor-pointer"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            />
+          </svg>
+        </div>
 
+        <div className="flex items-center p-2 cursor-pointer">
+          <h2 className="font-morsan text-gray-200 hover:text-blue-600 text-xl pr-1">
+            <strong>{session?.user.name || "Usuário"}</strong>
+          </h2>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-6 h-6 text-gray-200 cursor-pointer hover:text-blue-600"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+            />
+          </svg>
+        </div>
+      </div>
 
       <div className="w-full h-screen flex">
         <div className="w-3/12 rounded-none border-2 border-solid border-black shadow-black shadow-lg">
@@ -184,7 +265,7 @@ export default function Dashboard() {
         <div className="w-9/12 border-2 border-solid border-black h-screen ">
           <div className="w-full h-1/6">
             <div className="p-2 justify-start">
-              <h1 className="font-morsan text-2xl text-black">FEED</h1>
+              <h1 className="font-morsan text-2xl text-black">GRUPO</h1>
               <div className="flex w-full justify-end ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -370,6 +451,7 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

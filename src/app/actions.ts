@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth";
 
 const prisma = new PrismaClient()
 
-
 export async function getCategories(categoriesType: CATEGORY_TYPE) {
     const categories = await prisma.category.findMany({
         where: {
@@ -85,18 +84,21 @@ export async function getEvents() {
     return events
 }
 
-export async function getPosts() {
-    const user = (await getServerSession(nextAuthOptions))!.user
+export async function getPosts(id: string, target: 'EVENTO' | 'GRUPO') {
+    let posts: any = []
 
-    const posts = await prisma.group.findMany({
-        where: {
-            posts: {
-                some: {
-                    userId: user.id
-                }
+    if (target === 'EVENTO') {
+        posts = []
+    } else if (target === 'GRUPO') {
+        posts = await prisma.group.findMany({
+            where: {
+                id,
             },
-        }
-    })
+            include: {
+                posts: true
+            }
+        })
+    }
 
     console.log(posts)
 

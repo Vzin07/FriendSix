@@ -1,4 +1,5 @@
 import { Users } from "lucide-react";
+import { Plus } from "lucide-react";
 
 interface ComponetGrupProps {
   name: string
@@ -14,6 +15,7 @@ export default function ComponetGrup(props: ComponetGrupProps) {
       <h1 className="text-sm">{props.name}</h1>
       {/* <p className="text-xs truncate">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad omnis itaque fuga fugiat atque suscipit, quidem similique tenetur nihil nesciunt, odio nisi corrupti corporis laudantium ipsa! Inventore, quisquam. Possimus, voluptas.</p> */}
      </div>
+     <Plus className="cursor-pointer rounded-lg hover:bg-orange-300"></Plus>
     </div>
   );
 }
