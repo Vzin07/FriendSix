@@ -2,11 +2,11 @@
 
 import { nextAuthOptions } from "@/lib/utils";
 import { CATEGORY_TYPE, PrismaClient } from "@prisma/client";
-import { WrapTextIcon } from "lucide-react";
 import { getServerSession } from "next-auth";
 
+const prisma = new PrismaClient()
+
 export async function getCategories(categoriesType: CATEGORY_TYPE) {
-    const prisma = new PrismaClient()
 
     const categories = await prisma.category.findMany({
         where: {
@@ -25,7 +25,6 @@ export async function getCategories(categoriesType: CATEGORY_TYPE) {
 }
 
 export async function getGroups() {
-    const prisma = new PrismaClient()
 
     const user = (await getServerSession(nextAuthOptions))!.user
 
@@ -45,7 +44,6 @@ export async function getGroups() {
 }
 
 export async function getEvents() {
-    const prisma = new PrismaClient()
 
     const user = (await getServerSession(nextAuthOptions))!.user
 
@@ -64,20 +62,21 @@ export async function getEvents() {
     return events
 }
 
-export async function getPosts() {
-    const prisma = new PrismaClient()
+export async function getPosts(id: string, target: 'EVENTO' | 'GRUPO') {
+    let posts: any = []
 
-    const user = (await getServerSession(nextAuthOptions))!.user
-
-    const posts = await prisma.group.findMany({
-        where: {
-            posts: {
-                some: {
-                    userId: user.id
-                }
+    if (target === 'EVENTO') {
+        posts = []
+    } else if (target === 'GRUPO') {
+        posts = await prisma.group.findMany({
+            where: {
+                id,
             },
-        }
-    })
+            include: {
+                posts: true
+            }
+        })
+    }
 
     console.log(posts)
 
