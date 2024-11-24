@@ -16,6 +16,7 @@ export async function signUp(prevState: InitialState, formData: FormData) {
 
     const schema = z.object({
         name: z.string().max(90, "Nome deve ter até 90 caracteres."),
+        cellPhone: z.string().max(11),
         email: z.string().email('E-mail inválido.'),
         password: z.string().min(8, 'A senha deve conter ao menos 8 caracteres.')
     })
@@ -24,6 +25,7 @@ export async function signUp(prevState: InitialState, formData: FormData) {
 
     const data: SignUp = {
         name: formData.get('name') as string,
+        cellPhone: formData.get('cellPhone') as string,
         email: formData.get('email') as string,
         password: formData.get('password') as string
     }
@@ -44,6 +46,7 @@ export async function signUp(prevState: InitialState, formData: FormData) {
     await prisma.user.create({
         data: {
             ...data
+
         }
     })
 

@@ -1,16 +1,15 @@
 "use client";
 
-import Home from "@/components/home";
+import Header from "@/components/header";
 import ConteudoPrincipal from "@/components/conteudo";
 import Logo from "@/components/logo";
-import ComponetGrup from "@/components/grup";
+import Card from "@/components/card";
 import { useEffect, useState } from "react";
 import { InitialState } from "@/types";
 import { useFormState } from "react-dom";
 import { createEvent, createGroup } from "./actions";
 import { getCategories, getEvents, getGroups } from "../actions";
 import { Category, Event, Group } from "@prisma/client";
-import Link from "next/link";
 
 const initialState: InitialState = {
   success: false,
@@ -25,8 +24,8 @@ export default function Dashboard() {
   const [groups, setGroups] = useState<Group[]>([]);
   const [events, setEvents] = useState<Event[]>([])
 
-  const [state, formAction] = useFormState(createGroup, initialState);
-  const [state2, formAction2] = useFormState(createEvent, initialState);
+  const [grouptState, groupFormAction] = useFormState(createGroup, initialState);
+  const [eventState, eventFormAction] = useFormState(createEvent, initialState);
 
   const [toggle, setToggle] = useState(true)
 
@@ -77,38 +76,34 @@ export default function Dashboard() {
       setGroups(await getGroups());
     };
 
-    if (state.success == true) {
+    if (grouptState.success == true) {
       setIsModalOpenGroup(false);
 
       groups();
     }
-  }, [state.success]);
+  }, [grouptState.success]);
 
   useEffect(() => {
     const events = async () => {
       setEvents(await getEvents());
     };
 
-    if (state2.success == true) {
+    if (eventState.success == true) {
       setIsModalOpenEvent(false);
 
       events();
     }
-  }, [state.success, state2.success]);
+  }, [grouptState.success, eventState.success]);
 
   return (
-    <div className="w-full min-h-screen bg-orange-400">
-      
-      <Home></Home>
+    <div className="w-full h-screen bg-orange-400">
 
+      <Header />
 
-
-      <div className="w-full h-screen flex">
-        <div className="w-3/12 rounded-none border-2 border-solid border-black shadow-black shadow-lg">
+      <div className="w-full h-full flex pt-20">
+        <div className="w-3/12 border-1 border-solid border-black ">
           <div className="p-2 h-1/6">
-            <h1 className="font-morsan text-2xl text-black pb-5">
-              <strong>AÇÕES</strong>
-            </h1>
+            <h1 className="font-morsan text-2xl text-black pb-5">AÇÕES</h1>
 
             <div
               onClick={toggleModalGroups}
@@ -165,9 +160,7 @@ export default function Dashboard() {
             <div className={`${toggle ? 'flex flex-col items-center w-full' : 'hidden'}`}>
               <div className="w-10/12 flex flex-col gap-2 mt-2">
                 {groups.map((group, index) => (
-                  <Link href={`/grupo/${group.id}`} key={index}>
-                    <ComponetGrup name={group.name} />
-                  </Link>
+                  <Card key={index} name={group.name} id={group.id} type="group" />
                 ))}
               </div>
             </div>
@@ -175,17 +168,18 @@ export default function Dashboard() {
             <div className={`${!toggle ? 'flex flex-col items-center w-full' : 'hidden'}`}>
               <div className="w-10/12 flex flex-col gap-2 mt-2">
                 {events.map((event, index) => (
-                  <ComponetGrup name={event.name} key={index} />
+                  <Card key={index} name={event.name} id={event.id} type="event" />
                 ))}
               </div>
             </div>
           </div>
         </div>
-        <div className="w-9/12 border-2 border-solid border-black h-screen ">
+
+        <div className="w-9/12 border-2 border-solid border-black">
           <div className="w-full h-1/6">
-            <div className="p-2 justify-start">
+            <div className="p-2 flex justify-between">
               <h1 className="font-morsan text-2xl text-black">FEED</h1>
-              <div className="flex w-full justify-end ">
+              <div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -204,10 +198,18 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="flex flex-col items-center h-5/6 ">
-            <ConteudoPrincipal />
-            <ConteudoPrincipal />
-            <ConteudoPrincipal />
+          <div className="flex flex-col items-center h-5/6 mx-5 gap-3">
+            <div className="h-36">
+              <ConteudoPrincipal />
+            </div>
+
+            <div className="h-36">
+              <ConteudoPrincipal />
+            </div>
+
+            <div className="h-36">
+              <ConteudoPrincipal />
+            </div>
           </div>
         </div>
 
@@ -226,7 +228,7 @@ export default function Dashboard() {
               <h2 className="text-2xl font-bold text-center mb-6">
                 Criar Grupo
               </h2>
-              <form action={formAction} className="w-full">
+              <form action={groupFormAction} className="w-full">
                 <div className="mb-4">
                   <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -291,7 +293,7 @@ export default function Dashboard() {
               <h2 className="text-2xl font-bold text-center mb-6">
                 Criar Evento
               </h2>
-              <form action={formAction2} className="w-full">
+              <form action={eventFormAction} className="w-full">
                 <div className="mb-4">
                   <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -369,6 +371,7 @@ export default function Dashboard() {
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id        String          @id @default(uuid())
-  name      String          @db.VarChar(90)
-  email     String          @unique @db.VarChar(255)
-  cellPhone String?         @unique @map("cell_phone") @db.VarChar(11)
-  password  String
-  events    UsersOnEvents[]
-  groups    UsersOnGroups[]
-  posts     Post[]
+  id         String          @id @default(uuid())
+  name       String          @db.VarChar(90)
+  email      String          @unique @db.VarChar(255)
+  cellPhone  String?         @unique @map("cell_phone") @db.VarChar(11)
+  password   String
+  events     UsersOnEvents[]
+  groups     UsersOnGroups[]
+  groupPosts GroupPost[]
+  eventPosts EventPost[]
 
   @@map("users")
 }
@@ -28,7 +29,7 @@ model Event {
   category   Category        @relation(fields: [categoryId], references: [id])
   categoryId String          @map("category_id")
   users      UsersOnEvents[]
-  posts      Post[]          @relation("posts_on_events")
+  eventPost  EventPost[]
 
   @@map("events")
 }
@@ -39,22 +40,35 @@ model Group {
   category   Category        @relation(fields: [categoryId], references: [id])
   categoryId String          @map("category_id")
   users      UsersOnGroups[]
-  posts      Post[]          @relation("posts_on_groups")
+  groupPost  GroupPost[]
 
   @@map("groups")
 }
 
-model Post {
+model GroupPost {
   id          String  @id @default(uuid())
   photo       String? @db.LongText
   title       String  @db.VarChar(45)
   description String  @db.VarChar(1024)
   user        User    @relation(fields: [userId], references: [id])
   userId      String  @map("user_id")
-  events      Event[] @relation("posts_on_events")
-  groups      Group[] @relation("posts_on_groups")
+  group       Group   @relation(fields: [groupId], references: [id])
+  groupId     String  @map("group_id")
 
-  @@map("post")
+  @@map("group_posts")
+}
+
+model EventPost {
+  id          String  @id @default(uuid())
+  photo       String? @db.LongText
+  title       String  @db.VarChar(45)
+  description String  @db.VarChar(1024)
+  user        User    @relation(fields: [userId], references: [id])
+  userId      String  @map("user_id")
+  event       Event   @relation(fields: [eventId], references: [id])
+  eventId     String  @map("event_id")
+
+  @@map("event_posts")
 }
 
 model Category {
