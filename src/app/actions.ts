@@ -36,8 +36,6 @@ export async function getGroups() {
         }
     })
 
-    console.log(groups)
-
     return groups
 }
 
@@ -66,7 +64,6 @@ export async function getGroupById(id: string) {
 }
 
 export async function getEvents() {
-
     const user = (await getServerSession(nextAuthOptions))!.user
 
     const events = await prisma.event.findMany({
@@ -79,26 +76,46 @@ export async function getEvents() {
         }
     })
 
-    console.log(events)
-
     return events
 }
 
-export async function getPosts(id: string, target: 'EVENTO' | 'GRUPO') {
-    let posts: any = []
+export async function getPosts(target: 'EVENTO' | 'GRUPO' | 'AMBOS') {
+    const session = await getServerSession(nextAuthOptions)
 
-    if (target === 'EVENTO') {
-        posts = []
-    } else if (target === 'GRUPO') {
-        posts = await prisma.group.findMany({
-            where: {
-                id,
-            },
-            include: {
-                posts: true
-            }
-        })
-    }
+    // const posts = await prisma.user.findMany({
+    //     where: {
+    //         id: session?.user.id,
+    //     },
+    //     select: {
+    //         id: true,
+    //         eventPosts: target === 'EVENTO' || 'AMBOS' ? true : false,
+    //         groupPosts: target === 'GRUPO' || 'AMBOS' ? true : false,
+    //     },
+    // })
+
+    const posts = await prisma.$queryRaw`
+        SELECT
+            id,         
+            photo,     
+            title,      
+            description,
+            user_id as userId,
+            'GRUPO' as type
+        FROM
+            group_posts
+
+        UNION ALL
+
+        SELECT
+            id,         
+            photo,      
+            title,      
+            description,
+            user_id as userId,
+            'EVENTO' as type
+        FROM
+            event_posts
+    `
 
     console.log(posts)
 

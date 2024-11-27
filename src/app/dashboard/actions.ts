@@ -9,8 +9,6 @@ import { z } from "zod"
 const prisma = new PrismaClient()
 
 export async function createGroup(prevState: InitialState, formData: FormData) {
-    console.log(formData)
-
     const state = {
         success: true,
         errors: {}
@@ -56,8 +54,6 @@ export async function createGroup(prevState: InitialState, formData: FormData) {
 }
 
 export async function createEvent(prevState: InitialState, formData: FormData) {
-    console.log(formData)
-
     const state = {
         success: true,
         errors: {}
@@ -114,8 +110,6 @@ export async function createEvent(prevState: InitialState, formData: FormData) {
 }
 
 export async function createPostOnEvent(prevState: InitialState, formData: FormData) {
-    console.log(formData)
-
     console.log('evento')
 
     const state = {
@@ -165,8 +159,6 @@ export async function createPostOnEvent(prevState: InitialState, formData: FormD
 }
 
 export async function createPostOnGroup(prevState: InitialState, formData: FormData) {
-    console.log(formData)
-
     console.log('grupo')
 
     const state = {

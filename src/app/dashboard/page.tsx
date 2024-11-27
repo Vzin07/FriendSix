@@ -1,14 +1,14 @@
 "use client";
 
 import Header from "@/components/header";
-import ConteudoPrincipal from "@/components/conteudo";
+import Post from "@/components/post";
 import Logo from "@/components/logo";
 import Card from "@/components/card";
 import { useEffect, useState } from "react";
 import { InitialState } from "@/types";
 import { useFormState } from "react-dom";
 import { createEvent, createGroup } from "./actions";
-import { getCategories, getEvents, getGroups } from "../actions";
+import { getCategories, getEvents, getGroups, getPosts } from "../actions";
 import { Category, Event, Group } from "@prisma/client";
 
 const initialState: InitialState = {
@@ -23,6 +23,7 @@ export default function Dashboard() {
   const [eventCategories, setEventCategories] = useState<Category[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [events, setEvents] = useState<Event[]>([])
+  const [posts, setPosts] = useState<any>([])
 
   const [grouptState, groupFormAction] = useFormState(createGroup, initialState);
   const [eventState, eventFormAction] = useFormState(createEvent, initialState);
@@ -46,29 +47,31 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    const categories = async () => {
-      setGroupCategories(await getCategories("GRUPO"));
-    };
-
-    const groups = async () => {
-      setGroups(await getGroups());
-    };
-
-    categories();
-    groups();
-  }, []);
-
-  useEffect(() => {
-    const categories = async () => {
+    const eventCategories = async () => {
       setEventCategories(await getCategories("EVENTO"));
+    };
+
+    const groupCategories = async () => {
+      setGroupCategories(await getCategories("GRUPO"));
     };
 
     const events = async () => {
       setEvents(await getEvents());
     };
 
-    categories();
+    const groups = async () => {
+      setGroups(await getGroups());
+    };
+
+    const posts = async () => {
+      setPosts(await getPosts('AMBOS'));
+    };
+
+    eventCategories();
+    groupCategories();
     events();
+    groups();
+    posts()
   }, []);
 
   useEffect(() => {
@@ -198,18 +201,18 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="flex flex-col items-center h-5/6 mx-5 gap-3">
-            <div className="h-36">
-              <ConteudoPrincipal />
-            </div>
-
-            <div className="h-36">
-              <ConteudoPrincipal />
-            </div>
-
-            <div className="h-36">
-              <ConteudoPrincipal />
-            </div>
+          <div className="flex flex-col items-center justify-center mx-5 gap-3">
+            {posts.map((post, index) => (
+              <div className="h-auto w-8/12" key={index}>
+                <Post
+                  id={post.id}
+                  photo={post.photo}
+                  title={post.title}
+                  description={post.description}
+                // userId={}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
