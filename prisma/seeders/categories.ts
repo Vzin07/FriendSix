@@ -223,10 +223,198 @@ export async function insertCategories(
             id:'45af70a4-08c0-4ec9-b5ab-7d56fdcf15a9',
             name:"Funkeiros",
             type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'eab2a7d3-68d6-4bfd-b322-6334b1c8f756',
+            name:'Dorameiros',
+            type:$Enums.CATEGORY_TYPE.GRUPO
+        },
+        {
+            id:'4b2276a5-dd8d-4740-9dce-9c1241727d14',
+            name:'GLs',
+            type:$Enums.CATEGORY_TYPE.GRUPO
+        },
+        {
+            id:'f2b7cf14-5cef-450c-85fd-ff4956cfe580',
+            name:'TWICE',
+            type:$Enums.CATEGORY_TYPE.GRUPO
+        },
+        {
+            id:'25b08c13-3622-443a-a8a7-1731a3ef575e',
+            name:'Baseboll',
+            type:$Enums.CATEGORY_TYPE.GRUPO
+        },
+        {
+            id:'7c8732d3-40db-4de8-b194-54beae3a3e8d',
+            name:'Boliche',
+            type:$Enums.CATEGORY_TYPE.EVENTO
+        },   
+        {
+            id:'c940b6d5-8c3c-43ae-ad56-dae1d06314e5',
+            name:'BTS',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'24dcbca7-d745-4768-bb43-ca6f0e217a5c',
+            name:'Clubes do livro',
+            type:$Enums.CATEGORY_TYPE.GRUPO
+        },
+        {
+            id:'ffaec119-1afe-4f08-8504-d7553ff45e06',
+            name:'Inteligência artificial',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'617f425a-db2b-4d43-aa17-d968d7b85ea4',
+            name:'Gastronomia',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'32be44e1-4958-4c81-b059-2258c9712306',
+            name:'Empreendedores',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'e2c582c8-f94e-4d6a-aa32-1e7018b016bb',
+            name:'Networking Profissional ',
+            type:$Enums.CATEGORY_TYPE.GRUPO
+        },
+        {
+            id:'7e168535-323d-411a-882c-449da54b048e',
+            name:'Desenvolvimento de Software',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'0afee1b3-8843-4740-9a4d-ba5c47d70cfa',
+            name:'Consultoria e Coaching',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'a6de8b0b-bdf4-4a24-9f29-ef0a9bf9dc60',
+            name:'Voluntariado de Meio Ambiente',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'62793a87-2fee-482d-ad88-a9af783ffa56',
+            name:'Ajuda Humanitária',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'47834369-1e96-42b9-82f2-4c98cdaeb179',
+            name:'Ação Social',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'2c8f8e94-6b2e-4b44-83fe-15c1a3b7ccf4',
+            name:'Proteção Animal',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'015c3a3b-6c37-4ee4-8dc1-8fd8f117d778',
+            name:'Direitos Humanos e Cidadania',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'3be5120b-4219-4b66-bc0b-137ed2da135c',
+            name:'Voluntariado Local e Internacional',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'3faffc0f-fa11-4577-b465-56b37cd26e38',
+            name:'Estudos de Ciências',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'99827fb9-79a2-412c-b4ce-3246682928c5',
+            name:'Estudos de História',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'307d1180-d983-4747-8805-185060df5a4b',
+            name:'Estudos de Filosofia',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'f4b42cce-4e3b-4850-a52f-860b0bc32260',
+            name:'Estudos de Psicologia',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'ee964bfe-6bf9-4c08-b7ec-2abd714eabdc',
+            name:'Educação Física',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'2c8d8a81-da73-4937-ad2c-322bf8a9f0f7',
+            name:'Estudos de Saúde Tecnologia',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'cc61410e-adbd-461b-8624-0e02afdfbc6c',
+            name:'Estudos de Inovação Estudos Culturais',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'72f5485b-9c60-4f77-aa33-5cb8b9b915ce',
+            name:'Séries e Filmes',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'63991ec1-52f4-4e10-aedb-a61c2043a714',
+            name:'Anime e Mangá',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'fc268810-dc37-420b-aa77-11a290043836',
+            name:'Teatro e Performances',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'be551f29-a93f-450c-8b88-35b8ae883535',
+            name:'',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'54a81a1b-d448-4e18-bf18-648116b88adicionar',
+            name:'Eventos Culturais ',
+            type:$Enums.CATEGORY_TYPE.EVENTO
+        },
+        {
+            id:'d10f4f37-989d-49bb-9dba-924e6a2a6c90',
+            name:'Fitness',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'3623c216-55a5-4c05-b80d-8ad1a270c7c5',
+            name:'Saúde e Nutrição',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'370921b7-0e5c-4bb2-bafa-bffbb97b1300',
+            name:'Autocuidado e Beleza',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'4db2e4f5-c72b-4718-8947-223987816256',
+            name:'Astrologia e Espiritualidade',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'486f623d-08a4-4213-bf17-765e19fbc39a',
+            name:'YouTubers',
+            type:$Enums.CATEGORY_TYPE.AMBOS
+        },
+        {
+            id:'072822c5-cb5e-46a9-9f05-3545d40710f6',
+            name:'Blogs',
+            type:$Enums.CATEGORY_TYPE.AMBOS
         }
+
+        
 
 
 //npx prisma db seed subir categoria
+//https://www.uuidgenerator.net/
     ]
 
 
