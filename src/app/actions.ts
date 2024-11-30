@@ -116,8 +116,6 @@ export async function getPosts(target: 'EVENTO' | 'GRUPO' | 'AMBOS') {
         FROM
             event_posts
     `
-
-    console.log(posts)
-
+    
     return posts
 }

@@ -4,7 +4,7 @@ import { createPostOnEvent, createPostOnGroup } from "@/app/dashboard/actions";
 import { InitialState } from "@/types";
 import { CircleX, Users } from "lucide-react";
 import { Plus } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 interface CardProps {
@@ -57,6 +57,14 @@ export default function Card(props: CardProps) {
   const toggleModal = () => {
     setModalOpen((prevState) => !prevState);
   };
+
+  useEffect(() => {
+    if (groupState.success == true || eventState.success == true) {
+      console.log("oi casailho")
+      toggleModal();
+    };
+
+  }, [groupState.success, eventState.success]);
 
   return (
     <div className="cursor-pointer w-full h-14 bg-orange-300 hover:bg-orange-500 flex items-center px-2 rounded-lg shadow-sm hover:shadow-black">

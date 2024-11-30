@@ -1,33 +1,55 @@
-import { Users } from "lucide-react";
+import { Heart, MessageSquareText, Users } from "lucide-react";
 
 interface PostProps {
   id: string;
   photo: string | null;
   title: string;
   description: string;
-  // userId: string;
+  userId: string;
+  type: string
 }
 
 export default function Post(props: PostProps) {
   return (
-    <div className="bg-orange-300 rounded-md w-full p-6 space-y-2">
+    <div className="bg-orange-300 rounded-md w-full p-3 space-y-2">
       <div className="flex justify-between w-full">
-        <div className="flex">
-          <Users color="black" size={26} />
-          <h2 className="ml-2 cursor-pointer hover:underline font-morsan">{props.title}</h2>
+        <div className="flex items-center justify-between">
+          <Users color="black" className="size-10 cursor-pointer hover:underline" />
+
+          <div className="flex-col font-morsan">
+            <h2 className="ml-2 text-xl cursor-pointer hover:underline">{}usuário000</h2>
+            <h4 className="ml-2 text-base cursor-pointer hover:underline">{props.type} | {props.title}</h4>
+          </div>
         </div>
 
-        <h3 className="font-morsan text-xs">Publicado em 28/09/2024 às 20:20</h3>
+
       </div>
 
-      <div className="flex justify-center items-center">
-        <div className="aspect-square w-5/6">
-          <img className="object-cover w-full h-full" src={props.photo as string} alt="image" />
+      <div className="flex-col justify-center items-center">
+        <div className="aspect-square w-full bottom-3">
+          <img className="object-cover w-full h-full rounded-lg" src={props.photo as string} alt="image" />
+        </div>
+
+        <div className="flex w-full p-1 justify-between mt-1">
+          <div className="flex gap-2">
+            <Heart />
+            <MessageSquareText />
+          </div>
+
+          <div>
+            <h3 className="font-morsan text-xs">Publicado em 28/09/2024 às 20:20</h3>
+          </div>
         </div>
       </div>
 
-      <div className="font-morsan">
-        {props.description}
+      <div className="gap-1">
+        <div>
+          <h2 className="text-lg pl-1 underline">{props.title}</h2>
+        </div>
+
+        <div className="font-morsan text-justify">
+          {props.description}
+        </div>
       </div>
     </div>
   );
