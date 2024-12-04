@@ -13,6 +13,7 @@ interface PostProps {
 
 export default function Post(props: PostProps) {
   const [line, setLine] = useState(true);
+
   return (
     <div className="bg-orange-300 rounded-md w-full p-3 space-y-2">
       <div className="flex justify-between w-full">
@@ -36,7 +37,7 @@ export default function Post(props: PostProps) {
         <div className="flex w-full p-1 justify-between mt-1">
           <div className="flex gap-2">
             <Heart />
-            <Comment  id={props.id}/>
+            <Comment id={props.id} type={props.type} />
           </div>
 
           <div>

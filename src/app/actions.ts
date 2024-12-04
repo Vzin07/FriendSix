@@ -2,9 +2,15 @@
 
 import { nextAuthOptions } from "@/lib/utils";
 import { CATEGORY_TYPE, PrismaClient } from "@prisma/client";
+import { Divide } from "lucide-react";
 import { getServerSession } from "next-auth";
 
 const prisma = new PrismaClient()
+
+interface CommentProps {
+    id: string,
+    type: string
+}
 
 export async function getCategories(categoriesType: CATEGORY_TYPE) {
     const categories = await prisma.category.findMany({
@@ -79,51 +85,59 @@ export async function getEvents() {
     return events
 }
 
-export async function getPosts(target: 'EVENTO' | 'GRUPO' | 'AMBOS') {
+export async function getPosts(type: 'EVENTO' | 'GRUPO' | 'AMBOS') {
     const session = await getServerSession(nextAuthOptions)
 
-    // const posts = await prisma.user.findMany({
-    //     where: {
-    //         id: session?.user.id,
-    //     },
-    //     select: {
-    //         id: true,
-    //         eventPosts: target === 'EVENTO' || 'AMBOS' ? true : false,
-    //         groupPosts: target === 'GRUPO' || 'AMBOS' ? true : false,
-    //     },
-    // })
+    const posts = await prisma.user.findUnique({
+        where: {
+            id: session?.user.id,
+        },
+        select: {
+            groupPosts: true
+        },
+    })
 
-    const posts = await prisma.$queryRaw`
-        SELECT
-            id,         
-            photo,     
-            title,      
-            description,
-            user_id as userId,
-            'GRUPO' as type
-        FROM
-            group_posts
+    // const posts = await prisma.$queryRaw`
+    //     SELECT
+    //         id,         
+    //         photo,     
+    //         title,      
+    //         description,
+    //         user_id as userId,
+    //         'GRUPO' as type
+    //     FROM
+    //         group_posts
 
-        UNION ALL
+    //     UNION ALL
 
-        SELECT
-            id,         
-            photo,      
-            title,      
-            description,
-            user_id as userId,
-            'EVENTO' as type
-        FROM
-            event_posts
-    `
-    
+    //     SELECT
+    //         id,         
+    //         photo,      
+    //         title,      
+    //         description,
+    //         user_id as userId,
+    //         'EVENTO' as type
+    //     FROM
+    //         event_posts
+    // `
+    console.log(posts)
     return posts
 }
 
-export async function getComments(id: string) {
-    const comments = await prisma.commentGroupPost.findMany({
+export async function getComments(props: CommentProps) {
+    if (props.type == 'GRUPO') {
+        const comments = await prisma.commentGroupPost.findMany({
+            where: {
+                groupPostId: props.id
+            }
+        })
+
+        return comments
+    }
+
+    const comments = await prisma.commentEventPost.findMany({
         where: {
-            groupPostId: id
+            eventPostId: props.id
         }
     })
 

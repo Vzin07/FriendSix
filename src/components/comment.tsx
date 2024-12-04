@@ -2,7 +2,7 @@
 
 import { creatCommentOnGroup } from "@/app/dashboard/actions";
 import { InitialState } from "@/types";
-import { CommentGroupPost } from "@prisma/client";
+import { CommentEventPost, CommentGroupPost } from "@prisma/client";
 import { ArrowBigRightDash, MessageSquareText, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
@@ -15,12 +15,13 @@ const initialState: InitialState = {
 };
 
 interface CommentProps {
-    id: string
+    id: string,
+    type: string
 }
 
 export default function Comment(props: CommentProps) {
     const [isModalOpenComment, setIsModalOpenComment] = useState(false);
-    const [comments, setComment] = useState<CommentGroupPost[]>([])
+    const [comments, setComment] = useState<CommentGroupPost[] | CommentEventPost[]>([])
 
     const [commentState, commentFormAction] = useFormState(creatCommentOnGroup, initialState);
 
@@ -30,7 +31,7 @@ export default function Comment(props: CommentProps) {
 
     useEffect(() => {
         const commentsOnGroup = async () => {
-            setComment(await getComments(props.id));
+            setComment(await getComments(props));
         };
 
         commentsOnGroup();
@@ -38,7 +39,7 @@ export default function Comment(props: CommentProps) {
 
     useEffect(() => {
         const commentsOnGroup = async () => {
-            setComment(await getComments(props.id));
+            setComment(await getComments(props));
         };
 
         if (commentState.success == true) {
@@ -80,7 +81,7 @@ export default function Comment(props: CommentProps) {
                                 <input name="text" type="text" placeholder="Comentario" className="w-96 rounded-xl border-2 border-black p-1 bg-slate-400" required />
 
                                 <input type="hidden" name="id" value={props.id} />
-                            
+
                                 <button
                                     type="submit"
                                     className="rounded-full border-2 border-black">

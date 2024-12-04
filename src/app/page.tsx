@@ -2,67 +2,67 @@
 
 import Logo from '@/components/logo';
 import { FormEvent, useState } from "react"
-import { z } from "zod" 
+import { z } from "zod"
 import { signIn as nextAuthSignIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
- function Login() {
+function Login() {
   const [errors, setErrors] = useState({})
 
   const router = useRouter()
 
-  
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-  
+
     const formData = new FormData(e.currentTarget)
 
     const schema = z.object({
-        email: z.string().email('E-mail inválido.'),
-        password: z.string().min(8, 'A senha deve conter ao menos 8 caracteres.')
+      email: z.string().email('E-mail inválido.'),
+      password: z.string().min(8, 'A senha deve conter ao menos 8 caracteres.')
     })
 
     type SignIn = z.infer<typeof schema>
 
     const data: SignIn = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string
+      email: formData.get('email') as string,
+      password: formData.get('password') as string
     }
 
     const validatedFields = schema.safeParse(data)
 
     if (!validatedFields.success) {
-        setErrors(validatedFields.error.flatten().fieldErrors)
+      setErrors(validatedFields.error.flatten().fieldErrors)
 
-        return
+      return
     }
-    
+
     const login = await nextAuthSignIn('credentials', {
-        email: formData.get('email'),
-        password: formData.get('password'),
-        redirect: false
+      email: formData.get('email'),
+      password: formData.get('password'),
+      redirect: false
     })
 
     if (!login?.ok) {
-        setErrors({
-            general: 'Revise suas credenciais de acesso.'
-        })
+      setErrors({
+        general: 'Revise suas credenciais de acesso.'
+      })
 
-        return
+      return
     }
 
     router.replace('/dashboard')
-}
+  }
 
   return (
     <div className="flex justify-center items-center h-screen bg-orange-400">
       <div className="w-full max-w-md bg-orange-200 p-8 rounded-lg shadow-lg flex flex-col items-center">
         <div className='rounded-full bg-orange-500 w-20 flex flex-col justify-center items-center aspect-square p-2'>
 
-        <Link href={'/dashboard'}>
-          <Logo title/>
-        </Link>
+          <Link href={'/dashboard'}>
+            <Logo title />
+          </Link>
         </div>
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
         <form onSubmit={handleSubmit} className='w-full'>

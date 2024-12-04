@@ -34,7 +34,6 @@ export default function CreatModalGroup() {
     }, []);
 
     useEffect(() => {
-
         const groups = async () => {
             setGroups(await getGroups());
         };
