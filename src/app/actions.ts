@@ -119,3 +119,13 @@ export async function getPosts(target: 'EVENTO' | 'GRUPO' | 'AMBOS') {
     
     return posts
 }
+
+export async function getComments(id: string) {
+    const comments = await prisma.commentGroupPost.findMany({
+        where: {
+            groupPostId: id
+        }
+    })
+
+    return comments
+}

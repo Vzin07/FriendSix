@@ -206,3 +206,46 @@ export async function createPostOnGroup(prevState: InitialState, formData: FormD
 
     return state
 }
+
+export async function creatCommentOnGroup(prevState: InitialState, formData: FormData) {
+    console.log(formData)
+
+    const state = {
+        success: true,
+        errors: {}
+    }
+
+    const schema = z.object({
+        text: z.string(),
+        id: z.string().uuid()
+    })
+
+    type Comment = z.infer<typeof schema>
+
+    const data: Comment = {
+        text: formData.get('text') as string,
+        id: formData.get('id') as string
+    }
+
+    const validatedFields = schema.safeParse(data)
+
+    if (!validatedFields.success) {
+        state.success = false
+        state.errors = validatedFields.error.flatten().fieldErrors
+
+        console.log(state)
+        return state
+    }
+
+    const user = (await getServerSession(nextAuthOptions))!.user
+
+    await prisma.commentGroupPost.create({
+        data: {
+            text: data.text,
+            groupPostId: data.id,
+            userId: user.id,
+        }
+    })
+
+    return state
+}
