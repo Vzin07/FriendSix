@@ -1,12 +1,17 @@
 'use client'
 
+import { useSession } from "next-auth/react";
 import Header from "@/components/header"
+import { Session } from "inspector/promises"
+import { useState } from "react";
 import { BookUser, CalendarRange, CircleEllipsis, ContactRound, UsersRound } from "lucide-react"
 
 
 
 export default function Perfil() {
 
+    const { data: session } = useSession();
+    const [perfil, setPerfil] = useState(false);
 
     return (
         <div className="w-full h-screen bg-orange-400">
@@ -22,7 +27,7 @@ export default function Perfil() {
                         <img src="" alt="" className="object-cover w-full h-full rounded-full" />
                     </div>
 
-                    <h1 className="font-morsan text-6xl">usuário000</h1>
+                    <h1 className="font-morsan text-5xl hover:cursor-pointer">{session?.user.name}</h1>
                 </div>
 
                 <div className="flex mr-5 -mt-14 pt-2 justify-end">

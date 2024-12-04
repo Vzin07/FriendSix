@@ -2,9 +2,9 @@
 
 import { createPostOnEvent, createPostOnGroup } from "@/app/dashboard/actions";
 import { InitialState } from "@/types";
-import { CircleX, Users } from "lucide-react";
+import { CircleX, PlusSquare, Users } from "lucide-react";
 import { Plus } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 interface CardProps {
@@ -31,6 +31,9 @@ export default function Card(props: CardProps) {
   const [base64, setBase64] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState("");
+  const [icon, setIcon] = useState<JSX.Element | null>(
+    <PlusSquare size="100%" />
+  );
 
   const createBase64 = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -40,7 +43,8 @@ export default function Card(props: CardProps) {
       reader.readAsDataURL(file);
 
       reader.onloadend = () => {
-        let base64: string = reader.result as string;
+        const base64: string = reader.result as string;
+
         setBase64(base64);
         setImgSrc(URL.createObjectURL(file));
       };
@@ -71,8 +75,26 @@ export default function Card(props: CardProps) {
     }
   }, [groupState.success, eventState.success]);
 
+  const showPlusIcon = () => {
+    setIcon(<PlusSquare size="100%" />);
+  };
+
+  const removeShowPlusIconOnMouseOver = () => {
+    if (imgSrc) {
+      setIcon(
+        <img
+          src={imgSrc}
+          alt="Pré-visualização"
+          className="object-cover w-full h-full"
+        />
+      );
+    } else {
+      setIcon(<PlusSquare size="100%" />);
+    }
+  };
+
   return (
-    <div className="cursor-pointer w-full h-14 bg-orange-300 hover:bg-orange-500 flex items-center px-2 rounded-lg shadow-sm hover:shadow-black">
+    <div className="w-full h-14 bg-orange-300 hover:bg-orange-500 flex items-center px-2 rounded-lg shadow-sm hover:shadow-black">
       <div className="w-1/6">
         <Users color="black" size={26} />
       </div>
@@ -88,7 +110,7 @@ export default function Card(props: CardProps) {
 
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex justify-center items-center">
-          <div className="absolute bg-orange-300 w-3/12 h-2/6 p-3 rounded-lg shadow-md shadow-black">
+          <div className="absolute bg-orange-300 w-3/6 h-3/6 p-3 rounded-lg shadow-md shadow-black">
             <button
               className="absolute top-0 right-0 p-2"
               onClick={toggleModal}
@@ -101,17 +123,19 @@ export default function Card(props: CardProps) {
                   htmlFor="image"
                   className="block text-gray-700 text-sm font-bold mb-2"
                 >
-                  <div className="w-24 aspect-square">
-                    <img
-                      src={imgSrc}
-                      alt="Pré-visualização"
-                      className="object-cover w-full h-full"
-                    />
+                  <div className="w-24 aspect-square cursor-pointer flex justify-center items-center">
+                    <div
+                    className=" aspect-square h-28"
+                      onMouseOver={showPlusIcon}
+                      onMouseOut={removeShowPlusIconOnMouseOver}
+                    >
+                      {icon}
+                    </div>
                   </div>
                 </label>
               </div>
               <input
-                className="hidden"
+                className="hidden cursor-pointer"
                 type="file"
                 name="image"
                 id="image"
