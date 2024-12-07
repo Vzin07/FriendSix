@@ -82,8 +82,7 @@ export async function getEvents() {
 export async function getPosts(type: 'EVENTO' | 'GRUPO' | 'AMBOS') {
     const session = await getServerSession(nextAuthOptions)
 
-
-    const posts = await prisma.user.findUnique({
+    const userPosts = await prisma.user.findUnique({
         where: {
             id: session?.user.id,
         },
@@ -96,13 +95,13 @@ export async function getPosts(type: 'EVENTO' | 'GRUPO' | 'AMBOS') {
                     description: true,
                     userId: true,
                     user: {
-                        select:{
-                            name:true
+                        select: {
+                            name: true
                         }
                     },
-                    group:{
-                        select:{
-                            name:true
+                    group: {
+                        select: {
+                            name: true
                         }
                     },
                     createdAt: true
@@ -116,13 +115,13 @@ export async function getPosts(type: 'EVENTO' | 'GRUPO' | 'AMBOS') {
                     description: true,
                     userId: true,
                     user: {
-                        select:{
-                            name:true
+                        select: {
+                            name: true
                         }
                     },
-                    event:{
-                        select:{
-                            name:true
+                    event: {
+                        select: {
+                            name: true
                         }
                     },
                     createdAt: true,
@@ -131,26 +130,30 @@ export async function getPosts(type: 'EVENTO' | 'GRUPO' | 'AMBOS') {
         },
     })
 
+    if (userPosts) {
+        const postsWithType = {
+            groupPosts: userPosts.groupPosts.map(post => ({
+                ...post,
+                type: 'GRUPO',
+            })),
+            eventPosts: userPosts.eventPosts.map(post => ({
+                ...post,
+                type: 'EVENTO',
+            })),
+        };
 
-    const postsWithType = {
-        groupPosts: posts.groupPosts.map(post => ({
-            ...post,
-            type: 'GRUPO',
-        })),
-        eventPosts: posts.eventPosts.map(post => ({
-            ...post,
-            type: 'EVENTO',
-        })),
-    };
+        if (type == 'GRUPO') {
+            return postsWithType.groupPosts
+        };
 
-    if (type == 'GRUPO') {
-        return postsWithType.groupPosts
-    };
+        if (type == 'EVENTO') {
+            return postsWithType.eventPosts
+        };
 
-    if (type == 'EVENTO') {
-        return postsWithType.eventPosts
-    };
-    return postsWithType
+        return postsWithType
+    }
+
+    return []
 }
 
 

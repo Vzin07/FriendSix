@@ -21,7 +21,6 @@ function Signup() {
   const [cellPhone, setCellPhone] = useState('')
 
   const [state, formAction] = useFormState(signUp, initialState)
-
   const router = useRouter()
 
   useEffect(() => {
@@ -40,6 +39,14 @@ function Signup() {
     }
   }, [state.success, router])
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = new FormData(event.currentTarget)
+
+    formAction(form);
+  };
+
   return (
     <div className="flex justify-center items-center h-screen bg-orange-400">
       <div className="w-full max-w-md bg-orange-200 p-8 rounded-lg shadow-lg flex flex-col items-center">
@@ -47,7 +54,7 @@ function Signup() {
           <Logo title />
         </div>
         <h2 className="text-2xl font-bold text-center mb-6">Cadastrar-se</h2>
-        <form action={formAction} className='w-full'>
+        <form onSubmit={handleSubmit} className='w-full'>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
               Nome
@@ -67,7 +74,7 @@ function Signup() {
             )}
           </div>
 
-          
+
 
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">

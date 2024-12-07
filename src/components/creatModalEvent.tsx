@@ -14,7 +14,11 @@ const initialState: InitialState = {
     errors: {},
 };
 
-export default function CreatModalEvent() {
+interface CreatModalEventProps {
+    onNewEvent: () => Promise<void>
+}
+
+export default function CreatModalEvent(props: CreatModalEventProps) {
     const [isModalOpenEvent, setIsModalOpenEvent] = useState(false);
     const [eventCategories, setEventCategories] = useState<Category[]>([]);
     const [events, setEvents] = useState<Event[]>([])
@@ -38,9 +42,14 @@ export default function CreatModalEvent() {
             setEvents(await getEvents());
         };
 
+        const updateEvents = async () => {
+            await props.onNewEvent()
+        };
+
         if (eventState.success == true) {
             eventState.success = false
             eventState.errors = {}
+            updateEvents()
             setIsModalOpenEvent(false);
             events()
         };
@@ -55,7 +64,7 @@ export default function CreatModalEvent() {
                 <Calendar />
                 <h2 className="ps-2">Criar Eventos</h2>
             </div>
-            
+
             {isModalOpenEvent && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="w-full max-w-md bg-orange-200 p-8 rounded-lg shadow-lg flex flex-col items-center relative">

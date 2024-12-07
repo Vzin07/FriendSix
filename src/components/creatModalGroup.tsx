@@ -15,10 +15,10 @@ const initialState: InitialState = {
 };
 
 interface CreatModalGroupProps {
-    onNewGroup: () => {}
+    onNewGroup: () => Promise<void>
 }
 
-export default function CreatModalGroup({ onNewGroup }: CreatModalGroupProps) {
+export default function CreatModalGroup(props: CreatModalGroupProps) {
     const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
     const [groupCategories, setGroupCategories] = useState<Category[]>([]);
     const [groups, setGroups] = useState<Group[]>([]);
@@ -42,10 +42,14 @@ export default function CreatModalGroup({ onNewGroup }: CreatModalGroupProps) {
             setGroups(await getGroups());
         };
 
+        const updateGroups = async () => {
+            await props.onNewGroup()
+        };
+
         if (grouptState.success == true) {
             grouptState.success = false
             grouptState.errors = {}
-            handleCreateGroup
+            updateGroups()
             setIsModalOpenGroup(false);
             groups();
         };
@@ -53,10 +57,6 @@ export default function CreatModalGroup({ onNewGroup }: CreatModalGroupProps) {
     }, [grouptState.success]);
 
     const [groupName, setGroupName] = useState('');
-
-    const handleCreateGroup = () => {
-        onNewGroup;
-    };
 
     return (
         <div>
