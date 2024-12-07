@@ -80,8 +80,8 @@ export default function Header() {
             Página inicial
           </li>
           <li className="cursor-pointer hover:underline text-gray-500">Categorias</li>
-          <li className="cursor-pointer hover:underline pt-4 border-t-2 border-white"><CreatModalGroup onNewGroup={ } /></li>
-          <li className="cursor-pointer hover:underline"><CreatModalEvent onNewEvent={ } /></li>
+          {/* <li className="cursor-pointer hover:underline pt-4 border-t-2 border-white"><CreatModalGroup onNewGroup={ } /></li> */}
+          {/* <li className="cursor-pointer hover:underline"><CreatModalEvent onNewEvent={ } /></li> */}
           <li className="cursor-pointer hover:underline pt-4 border-t-2 border-white text-gray-500">Contatos</li>
           <li className="cursor-pointer hover:underline text-gray-500">Sobre</li>
         </ul>
