@@ -24,7 +24,7 @@ export default function Header() {
   }
 
   return (
-    <div className="bg-black w-full h-20 flex justify-between items-center shadow-black shadow-md fixed">
+    <div className="bg-black w-full h-20 flex justify-between items-center shadow-black shadow-md fixed z-50">
       <div>
         <button onClick={() => setDrawer(true)} className="flex md:hidden cursor-pointer p-3 text-gray-200">
           <AlignJustify className="w-8 h-8" />
