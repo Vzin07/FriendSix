@@ -21,9 +21,10 @@ interface CommentProps {
 
 export default function Comment(props: CommentProps) {
     const [isModalOpenComment, setIsModalOpenComment] = useState(false);
-    const [comments, setComment] = useState<CommentGroupPost[] | CommentEventPost[]>([])
-
-    const [commentState, commentFormAction] = useFormState(creatCommentOnGroup, initialState);
+    const [comments, setComments] = useState<CommentGroupPost[] | CommentEventPost[]>([])
+    const [commentCount, setCommentCount] = useState(0)
+    const [commentText, setCommentText] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const toggleModalComment = () => {
         setIsModalOpenComment(!isModalOpenComment);
@@ -31,27 +32,45 @@ export default function Comment(props: CommentProps) {
 
     useEffect(() => {
         const commentsOnGroup = async () => {
-            setComment(await getComments(props));
+            const { comments, commentCount } = await getComments(props.id, props.type);
+            console.log("Comentários recebidos:", comments);
+            setComments(comments)
+            setCommentCount(commentCount)
         };
 
         commentsOnGroup();
-    }, []);
+    }, [props.id, props.type]);
 
-    useEffect(() => {
-        const commentsOnGroup = async () => {
-            setComment(await getComments(props));
-        };
+    const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCommentText(e.target.value);
+    };
 
-        if (commentState.success == true) {
-            commentsOnGroup();
-        };
+    const handleCommentSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-    }, [commentState.success]);
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+
+        const state = await creatCommentOnGroup(initialState, new FormData(e.target as HTMLFormElement));
+
+        if (state.success) {
+            const { comments, commentCount } = await getComments(props.id, props.type);
+            setComments(comments);
+            setCommentCount(commentCount);
+            setCommentText("");
+        } else {
+            console.error("Erro ao criar comentário:", state.errors);
+        }
+
+        setIsSubmitting(false);
+    };
 
     return (
         <div>
-            <div onClick={toggleModalComment} className="cursor-pointer">
-                <MessageSquareText />
+            <div className="flex gap-1">
+                <MessageSquareText onClick={toggleModalComment} className="cursor-pointer" />
+                <span className="cursor-default">{commentCount}</span>
             </div>
 
             {isModalOpenComment && (
@@ -61,8 +80,9 @@ export default function Comment(props: CommentProps) {
                             onClick={toggleModalComment}
                             className="flex h-7 w-full justify-between"
                         >
-                            <div>
+                            <div className="flex gap-5">
                                 <h1 className="text-3xl">Comments</h1>
+                                <span className="text-3xl">{commentCount}</span>
                             </div>
 
                             <X className="size-8" />
@@ -77,8 +97,14 @@ export default function Comment(props: CommentProps) {
                         </div>
 
                         <div className="h-auto">
-                            <form action={commentFormAction} className="flex gap-2">
-                                <input name="text" type="text" placeholder="Comentario" className="w-96 rounded-xl border-2 border-black p-1 bg-slate-400" required />
+                            <form onSubmit={handleCommentSubmit} className="flex gap-2">
+                                <input onChange={handleCommentChange}
+                                    value={commentText}
+                                    name="text"
+                                    type="text"
+                                    placeholder="Comentario"
+                                    className="w-96 rounded-xl border-2 border-black p-1 bg-slate-400"
+                                    required />
 
                                 <input type="hidden" name="id" value={props.id} />
 

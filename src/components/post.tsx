@@ -1,6 +1,8 @@
-import { Heart, MessageSquareText, Users } from "lucide-react";
-import { useState } from "react";
+import { Heart, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 import Comment from "./comment";
+import { getLikes } from "@/app/actions";
+import { creatLikes } from "@/app/dashboard/actions";
 
 interface PostProps {
   id: string;
@@ -8,11 +10,39 @@ interface PostProps {
   title: string;
   description: string;
   userId: string;
-  type: string
+  user: string;
+  type: string;
+  datetime: Date
 }
 
 export default function Post(props: PostProps) {
   const [line, setLine] = useState(true);
+  const [likeStatus, setLikeStatus] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
+  useEffect(() => {
+    const likeOnPost = async () => {
+      const { likeStatus, likeCount } = await getLikes(props.id, props.type);
+      setLikeStatus(likeStatus);
+      setLikeCount(likeCount);
+    };
+
+    likeOnPost()
+  }, [props.id, props.type]);
+
+  const handleLikeClick = async () => {
+    const likeState = await creatLikes(props.id, props.type);
+    setLikeStatus(likeState);
+    setLikeCount(prev => likeState ? prev + 1 : prev - 1);
+  };
+
+  const dateTime = props.datetime.toLocaleString("pt-BR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
     <div className="bg-orange-300 rounded-md w-full p-3 space-y-2">
@@ -35,13 +65,17 @@ export default function Post(props: PostProps) {
         </div>
 
         <div className="flex w-full p-1 justify-between mt-1">
-          <div className="flex gap-2">
-            <Heart />
+          <div className="flex gap-4">
+            <div className="flex gap-1">
+              <Heart onClick={handleLikeClick} data-open={likeStatus} className="data-[open=true]:text-pink-600 cursor-pointer" />
+              <span className="cursor-default">{likeCount}</span>
+            </div>
+
             <Comment id={props.id} type={props.type} />
           </div>
 
           <div>
-            <h3 className="font-morsan text-xs">Publicado em 28/09/2024 às 20:20</h3>
+            <h3 className="font-morsan text-base">{dateTime ? "Publicado em  "+dateTime:'Publicado em 00/00/0000 às 00:00'}</h3>
           </div>
         </div>
       </div>

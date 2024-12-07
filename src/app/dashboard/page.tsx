@@ -26,12 +26,10 @@ export default function Dashboard() {
 
         <MenuDashboard />
 
-        <div className="md:w-8/12 h-full overflow-auto">
-          <div className="p-2">
+        <div className="md:w-8/12 h-full overflow-auto flex flex-col items-center">
+          <div className="p-2 w-full justify-start">
             <h1 className="font-morsan text-2xl text-black">FEED</h1>
           </div>
-
-          {JSON.stringify(posts)}
 
           {posts?.groupPosts?.length > 0 && (
             posts?.groupPosts.map((post, index) => (
@@ -42,7 +40,9 @@ export default function Dashboard() {
                   title={post.title}
                   description={post.description}
                   userId={post.userId}
+                  user={post.user}
                   type={post.type}
+                  datetime={post.createdAt}
                 />
               </div>
             ))

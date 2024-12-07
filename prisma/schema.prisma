@@ -58,6 +58,7 @@ model GroupPost {
   userId           String             @map("user_id")
   group            Group              @relation(fields: [groupId], references: [id])
   groupId          String             @map("group_id")
+  createdAt        DateTime           @default(now())
   CommentGroupPost CommentGroupPost[]
   LikeGroupPost    LikeGroupPost[]
 
@@ -73,6 +74,7 @@ model EventPost {
   userId           String             @map("user_id")
   event            Event              @relation(fields: [eventId], references: [id])
   eventId          String             @map("event_id")
+  createdAt        DateTime           @default(now())
   CommentEventPost CommentEventPost[]
   LikeEventPost    LikeEventPost[]
 

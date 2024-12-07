@@ -78,6 +78,9 @@ function Login() {
               placeholder="Digite seu email"
               required
             />
+            {errors.email && (
+              <p className="text-red-500 text-base mt-1">{errors.email[0]}</p>
+            )}
           </div>
 
           <div className="mb-6">
@@ -92,7 +95,14 @@ function Login() {
               placeholder="Digite sua senha"
               required
             />
+            {errors.password && (
+              <p className="text-red-500 text-base mt-1">{errors.password[0]}</p>
+            )}
           </div>
+
+          {errors.general && (
+            <p className="text-red-500 text-base mt-1 mb-2">{errors.general}</p>
+          )}
 
           <div className="flex items-center justify-between mb-6">
             <label className="flex items-center">

@@ -39,6 +39,8 @@ export default function CreatModalEvent() {
         };
 
         if (eventState.success == true) {
+            eventState.success = false
+            eventState.errors = {}
             setIsModalOpenEvent(false);
             events()
         };

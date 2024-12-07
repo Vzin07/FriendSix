@@ -28,13 +28,17 @@ export default function MenuDashboard() {
         groups();
     }, []);
 
+    const handleNewGroup = async () => {
+        setGroups(await getGroups());
+    };
+
     return (
         <div className="w-72 h-full border-r-2 border-solid border-black hidden md:block">
             <div>
                 <div className="p-2 h-40 border-b-2 border-solid border-black">
                     <h1 className="font-morsan text-2xl text-black pb-5">AÇÕES</h1>
                     <div className="flex cursor-pointer hover:underline bg-orange-300 hover:bg-orange-600 rounded-md p-1 m-1">
-                        <CreatModalGroup />
+                        <CreatModalGroup onNewGroup={handleNewGroup}/>
                     </div>
 
                     <div className="flex cursor-pointer hover:underline bg-orange-300 hover:bg-orange-600 rounded-md p-1 m-1">

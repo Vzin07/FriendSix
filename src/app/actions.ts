@@ -2,15 +2,9 @@
 
 import { nextAuthOptions } from "@/lib/utils";
 import { CATEGORY_TYPE, PrismaClient } from "@prisma/client";
-import { Divide } from "lucide-react";
 import { getServerSession } from "next-auth";
 
 const prisma = new PrismaClient()
-
-interface CommentProps {
-    id: string,
-    type: string
-}
 
 export async function getCategories(categoriesType: CATEGORY_TYPE) {
     const categories = await prisma.category.findMany({
@@ -88,58 +82,146 @@ export async function getEvents() {
 export async function getPosts(type: 'EVENTO' | 'GRUPO' | 'AMBOS') {
     const session = await getServerSession(nextAuthOptions)
 
+
     const posts = await prisma.user.findUnique({
         where: {
             id: session?.user.id,
         },
         select: {
-            groupPosts: true
+            groupPosts: {
+                select: {
+                    id: true,
+                    photo: true,
+                    title: true,
+                    description: true,
+                    userId: true,
+                    user: true,
+                    createdAt: true
+                }
+            },
+            eventPosts: {
+                select: {
+                    id: true,
+                    photo: true,
+                    title: true,
+                    description: true,
+                    userId: true,
+                    user: true,
+                    createdAt: true,
+                }
+            }
         },
     })
 
-    // const posts = await prisma.$queryRaw`
-    //     SELECT
-    //         id,         
-    //         photo,     
-    //         title,      
-    //         description,
-    //         user_id as userId,
-    //         'GRUPO' as type
-    //     FROM
-    //         group_posts
 
-    //     UNION ALL
+    const postsWithType = {
+        groupPosts: posts.groupPosts.map(post => ({
+            ...post,
+            type: 'GRUPO',
+        })),
+        eventPosts: posts.eventPosts.map(post => ({
+            ...post,
+            type: 'EVENTO',
+        })),
+    };
 
-    //     SELECT
-    //         id,         
-    //         photo,      
-    //         title,      
-    //         description,
-    //         user_id as userId,
-    //         'EVENTO' as type
-    //     FROM
-    //         event_posts
-    // `
-    console.log(posts)
-    return posts
+    if (type == 'GRUPO') {
+        return postsWithType.groupPosts
+    };
+
+    if (type == 'EVENTO') {
+        return postsWithType.eventPosts
+    };
+    return postsWithType
 }
 
-export async function getComments(props: CommentProps) {
-    if (props.type == 'GRUPO') {
-        const comments = await prisma.commentGroupPost.findMany({
+
+
+export async function getComments(id: string, type: string) {
+    let comments
+    let commentCount = 0
+    console.log(type)
+    if (type == 'GRUPO') {
+        comments = await prisma.commentGroupPost.findMany({
             where: {
-                groupPostId: props.id
+                groupPostId: id
             }
         })
 
-        return comments
+        commentCount = await prisma.commentGroupPost.count({
+            where: {
+                groupPostId: id
+            }
+        })
     }
 
-    const comments = await prisma.commentEventPost.findMany({
-        where: {
-            eventPostId: props.id
-        }
-    })
+    if (type == 'EVENTO') {
+        comments = await prisma.commentEventPost.findMany({
+            where: {
+                eventPostId: id
+            }
+        })
 
-    return comments
+        commentCount = await prisma.commentEventPost.count({
+            where: {
+                eventPostId: id
+            }
+        })
+    }
+
+    console.log(comments)
+    return {
+        comments,
+        commentCount
+    }
+}
+
+export async function getLikes(id: string, type: string) {
+    const session = (await getServerSession(nextAuthOptions))!.user
+
+    let likeStatus = false
+    let likeCount = 0
+
+    if (type == 'GRUPO') {
+        const existingLike = await prisma.likeGroupPost.findFirst({
+            where: {
+                groupPostId: id,
+                userId: session?.id
+            },
+        })
+
+        if (existingLike) {
+            likeStatus = true
+        }
+
+        likeCount = await prisma.likeGroupPost.count({
+            where: {
+                groupPostId: id,
+            },
+        })
+    }
+
+    if (type == 'EVENTO') {
+        const existingLike = await prisma.likeEventPost.findFirst({
+            where: {
+                eventPostId: id,
+                userId: session?.id
+            },
+        })
+
+        if (existingLike) {
+            likeStatus = true
+        }
+
+        likeCount = await prisma.likeEventPost.count({
+            where: {
+                eventPostId: id,
+            },
+        })
+    }
+
+    return {
+        likeStatus,
+        likeCount
+    }
 }

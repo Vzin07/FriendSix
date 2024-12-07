@@ -249,3 +249,39 @@ export async function creatCommentOnGroup(prevState: InitialState, formData: For
 
     return state
 }
+
+export async function creatLikes(id: string, type: string) {
+    const session = (await getServerSession(nextAuthOptions))!.user
+
+    if (type == 'GRUPO') {
+        const existingLike = await prisma.likeGroupPost.findFirst({
+            where: {
+                groupPostId: id,
+                userId: session?.id
+            },
+        })
+
+        if (existingLike) {
+
+            await prisma.likeGroupPost.delete({
+                where: {
+                    id: existingLike.id,
+                    userId: session?.id,
+                },
+            });
+            return false;
+        }
+
+        if (!existingLike) {
+            await prisma.likeGroupPost.create({
+                data: {
+                    groupPostId: id,
+                    userId: session.id
+                }
+            })
+            return true;
+        }
+        console.log(existingLike)
+    }
+    return false
+}

@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { InitialState } from '@/types';
 
+
+
 const initialState: InitialState = {
   success: false,
   errors: {}
@@ -15,6 +17,8 @@ const initialState: InitialState = {
 function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
+  const [cellPhone, setCellPhone] = useState('')
 
   const [state, formAction] = useFormState(signUp, initialState)
 
@@ -52,11 +56,18 @@ function Signup() {
               id="name"
               name="name"
               type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600"
               placeholder="Digite seu nome"
               required
             />
+            {state.errors.name && (
+              <p className="text-red-500 text-base mt-1">{state.errors.name[0]}</p>
+            )}
           </div>
+
+          
 
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
@@ -67,11 +78,15 @@ function Signup() {
               name="cellPhone"
               type="text"
               maxLength={11}
-              onChange={(e) => setPassword(e.target.value)}
+              value={cellPhone}
+              onChange={(e) => setCellPhone(e.target.value)}
               className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600"
               placeholder="Digite seu telefone"
               required
             />
+            {state.errors.cellPhone && (
+              <p className="text-red-500 text-base mt-1">{state.errors.cellPhone[0]}</p>
+            )}
           </div>
 
           <div className="mb-4">
@@ -82,11 +97,15 @@ function Signup() {
               id="email"
               name="email"
               type="email"
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600"
               placeholder="Digite seu email"
               required
             />
+            {state.errors.email && (
+              <p className="text-red-500 text-base mt-1">{state.errors.email[0]}</p>
+            )}
           </div>
 
           <div className="mb-4">
@@ -97,11 +116,15 @@ function Signup() {
               id="password"
               name="password"
               type="password"
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border bg-orange-400 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-600"
               placeholder="Digite sua senha"
               required
             />
+            {state.errors.password && (
+              <p className="text-red-500 text-base mt-1">{state.errors.password[0]}</p>
+            )}
           </div>
 
           <button

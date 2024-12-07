@@ -14,7 +14,11 @@ const initialState: InitialState = {
     errors: {},
 };
 
-export default function CreatModalGroup() {
+interface CreatModalGroupProps {
+    onNewGroup: () => {}
+}
+
+export default function CreatModalGroup({ onNewGroup }: CreatModalGroupProps) {
     const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
     const [groupCategories, setGroupCategories] = useState<Category[]>([]);
     const [groups, setGroups] = useState<Group[]>([]);
@@ -39,11 +43,20 @@ export default function CreatModalGroup() {
         };
 
         if (grouptState.success == true) {
+            grouptState.success = false
+            grouptState.errors = {}
+            handleCreateGroup
             setIsModalOpenGroup(false);
             groups();
         };
 
     }, [grouptState.success]);
+
+    const [groupName, setGroupName] = useState('');
+
+    const handleCreateGroup = () => {
+        onNewGroup;
+    };
 
     return (
         <div>
