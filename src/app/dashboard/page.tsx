@@ -40,7 +40,8 @@ export default function Dashboard() {
                   title={post.title}
                   description={post.description}
                   userId={post.userId}
-                  user={post.user}
+                  user={post.user.name}
+                  group={post.group.name}
                   type={post.type}
                   datetime={post.createdAt}
                 />

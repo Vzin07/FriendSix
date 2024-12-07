@@ -95,7 +95,16 @@ export async function getPosts(type: 'EVENTO' | 'GRUPO' | 'AMBOS') {
                     title: true,
                     description: true,
                     userId: true,
-                    user: true,
+                    user: {
+                        select:{
+                            name:true
+                        }
+                    },
+                    group:{
+                        select:{
+                            name:true
+                        }
+                    },
                     createdAt: true
                 }
             },
@@ -106,7 +115,16 @@ export async function getPosts(type: 'EVENTO' | 'GRUPO' | 'AMBOS') {
                     title: true,
                     description: true,
                     userId: true,
-                    user: true,
+                    user: {
+                        select:{
+                            name:true
+                        }
+                    },
+                    event:{
+                        select:{
+                            name:true
+                        }
+                    },
                     createdAt: true,
                 }
             }
@@ -169,7 +187,6 @@ export async function getComments(id: string, type: string) {
         })
     }
 
-    console.log(comments)
     return {
         comments,
         commentCount
