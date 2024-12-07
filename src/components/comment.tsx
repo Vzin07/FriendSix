@@ -1,6 +1,6 @@
 'use client'
 
-import { creatCommentOnGroup } from "@/app/dashboard/actions";
+import { creatCommentOnGroup } from "@/app/(authenticated)/dashboard/actions";
 import { InitialState } from "@/types";
 import { CommentEventPost, CommentGroupPost } from "@prisma/client";
 import { ArrowBigRightDash, MessageSquareText, X } from "lucide-react";

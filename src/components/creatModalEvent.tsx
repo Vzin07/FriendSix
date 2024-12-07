@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Logo from "./logo";
 import { useFormState } from "react-dom";
 import { InitialState } from "@/types";
-import { createEvent } from "@/app/dashboard/actions";
+import { createEvent } from "@/app/(authenticated)/dashboard/actions";
 import { Category, Event } from "@prisma/client";
 import { Calendar } from "lucide-react";
 import { getCategories, getEvents } from "@/app/actions";

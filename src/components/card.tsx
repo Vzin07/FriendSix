@@ -1,6 +1,6 @@
 "use client";
 
-import { createPostOnEvent, createPostOnGroup } from "@/app/dashboard/actions";
+import { createPostOnEvent, createPostOnGroup } from "@/app/(authenticated)/dashboard/actions";
 import { InitialState } from "@/types";
 import { CircleX, PlusSquare, Users } from "lucide-react";
 import { Plus } from "lucide-react";
@@ -11,6 +11,7 @@ interface CardProps {
   id: string;
   name: string;
   type: "group" | "event";
+  onNewPost: () => Promise<void>
 }
 
 const initialState: InitialState = {
@@ -69,10 +70,15 @@ export default function Card(props: CardProps) {
   };
 
   useEffect(() => {
+    const updateGroups = async () => {
+      await props.onNewPost()
+    };
+
     if (groupState.success == true || eventState.success == true) {
-      console.log("oi casailho");
+      updateGroups()
       toggleModal();
     }
+
   }, [groupState.success, eventState.success]);
 
   const showPlusIcon = () => {
@@ -125,7 +131,7 @@ export default function Card(props: CardProps) {
                 >
                   <div className="w-24 aspect-square cursor-pointer flex justify-center items-center">
                     <div
-                    className=" aspect-square h-28"
+                      className=" aspect-square h-28"
                       onMouseOver={showPlusIcon}
                       onMouseOut={removeShowPlusIconOnMouseOver}
                     >

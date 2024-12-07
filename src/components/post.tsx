@@ -2,7 +2,7 @@ import { Heart, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import Comment from "./comment";
 import { getLikes } from "@/app/actions";
-import { creatLikes } from "@/app/dashboard/actions";
+import { creatLikes } from "@/app/(authenticated)/dashboard/actions";
 
 interface PostProps {
   id: string;
@@ -37,16 +37,19 @@ export default function Post(props: PostProps) {
     setLikeCount(prev => likeState ? prev + 1 : prev - 1);
   };
 
-  const dateTime = props.datetime.toLocaleString("pt-BR", {
+  const date = props.datetime.toLocaleString("pt-BR", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
+  });
+
+  const time = props.datetime.toLocaleString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit",
   });
 
   return (
-    <div className="bg-orange-300 rounded-md w-full p-2 space-y-1">
+    <div className="bg-orange-300 rounded-md w-full p-3 space-y-1 border-2 border-black shadow-slate-800 shadow-lg">
       <div className="flex justify-between w-full -mt-1">
         <div className="flex items-center justify-between">
           <Users color="black" className="size-10 cursor-pointer hover:underline" />
@@ -63,7 +66,7 @@ export default function Post(props: PostProps) {
 
       <div className="flex-col justify-center items-center">
         <div className="aspect-square w-full bottom-3">
-          <img className="object-cover w-full h-full rounded-lg" src={props.photo as string} alt="image" />
+          <img className="object-cover w-full h-full rounded-lg bg-orange-400" src={props.photo as string} alt="image" />
         </div>
 
         <div className="flex w-full p-1 justify-between mt-1">
@@ -77,7 +80,7 @@ export default function Post(props: PostProps) {
           </div>
 
           <div>
-            <h3 className="font-morsan text-base">{dateTime ? "Publicado em  " + dateTime : 'Publicado em 00/00/0000 às 00:00'}</h3>
+            <h3 className="font-morsan text-base">{date ? "Publicado em  " + date + " às " + time : 'Publicado em 00/00/0000 às 00:00'}</h3>
           </div>
         </div>
       </div>

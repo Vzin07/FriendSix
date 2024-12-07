@@ -2,7 +2,7 @@
 
 import Logo from "@/components/logo";
 import { AlignJustify, CircleUserRound, LogOut, Replace, Search, } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import CreatModalGroup from "./creatModalGroup";
 import CreatModalEvent from "./creatModalEvent";
@@ -16,6 +16,12 @@ export default function Header() {
   const [perfil, setPerfil] = useState(false);
 
   const router = useRouter()
+
+  async function logOut() {
+    await signOut({ redirect: false })
+
+    router.replace('/')
+  }
 
   return (
     <div className="bg-black w-full h-20 flex justify-between items-center shadow-black shadow-md fixed">
@@ -74,8 +80,8 @@ export default function Header() {
             Página inicial
           </li>
           <li className="cursor-pointer hover:underline text-gray-500">Categorias</li>
-          <li className="cursor-pointer hover:underline pt-4 border-t-2 border-white"><CreatModalGroup /></li>
-          <li className="cursor-pointer hover:underline"><CreatModalEvent /></li>
+          <li className="cursor-pointer hover:underline pt-4 border-t-2 border-white"><CreatModalGroup onNewGroup={ } /></li>
+          <li className="cursor-pointer hover:underline"><CreatModalEvent onNewEvent={ } /></li>
           <li className="cursor-pointer hover:underline pt-4 border-t-2 border-white text-gray-500">Contatos</li>
           <li className="cursor-pointer hover:underline text-gray-500">Sobre</li>
         </ul>
@@ -88,7 +94,7 @@ export default function Header() {
           <li className="md:hidden cursor-pointer hover:underline text-gray-500">Grupos</li>
           <li className="md:hidden cursor-pointer hover:underline text-gray-500">Eventos</li>
           <li className="cursor-pointer hover:underline text-gray-500">Posts</li>
-          <li className="text-red-600 pt-4 border-t-2 border-white cursor-pointer hover:underline"><LogOut />Sair</li>
+          <li onClick={logOut} className="text-red-600 pt-4 border-t-2 border-white cursor-pointer hover:underline"><LogOut />Sair</li>
         </ul>
       </div>
     </div>

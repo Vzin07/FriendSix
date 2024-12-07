@@ -7,9 +7,11 @@ import { Event, Group } from "@prisma/client";
 import { getEvents, getGroups } from "@/app/actions";
 import Card from "./card";
 
+interface MenuProps {
+    onNewPost: () => Promise<void>
+}
 
-
-export default function MenuDashboard() {
+export default function MenuDashboard(props: MenuProps) {
     const [groups, setGroups] = useState<Group[]>([]);
     const [events, setEvents] = useState<Event[]>([]);
 
@@ -62,7 +64,7 @@ export default function MenuDashboard() {
                 <div className={`${toggle ? 'flex flex-col items-center ' : 'hidden'}`}>
                     <div className="w-10/12 flex flex-col gap-2 mt-2">
                         {groups.map((group, index) => (
-                            <Card key={index} name={group.name} id={group.id} type="group" />
+                            <Card key={index} name={group.name} id={group.id} type="group" onNewPost={props.onNewPost} />
                         ))}
                     </div>
                 </div>
@@ -70,7 +72,7 @@ export default function MenuDashboard() {
                 <div className={`${!toggle ? 'flex flex-col items-center' : 'hidden'}`}>
                     <div className="w-10/12 flex flex-col gap-2 mt-2">
                         {events.map((event, index) => (
-                            <Card key={index} name={event.name} id={event.id} type="event" />
+                            <Card key={index} name={event.name} id={event.id} type="event" onNewPost={props.onNewPost} />
                         ))}
                     </div>
                 </div>

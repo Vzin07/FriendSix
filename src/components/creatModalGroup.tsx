@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Logo from "./logo";
 import { useFormState } from "react-dom";
 import { InitialState } from "@/types";
-import { createGroup } from "@/app/dashboard/actions";
+import { createGroup } from "@/app/(authenticated)/dashboard/actions";
 import { Category, Group } from "@prisma/client";
 import { getCategories, getGroups } from "@/app/actions";
 import { UsersRound } from "lucide-react";
