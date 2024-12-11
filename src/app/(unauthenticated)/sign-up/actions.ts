@@ -15,7 +15,7 @@ export async function signUp(prevState: InitialState, formData: FormData) {
     }
 
     const schema = z.object({
-        name: z.string().max(90, "Nome deve ter até 90 caracteres."),
+        name: z.string().max(90, "Nome deve ter até 90 caracteres.").min(4, "nome deve conter 4 ou mais caracteres."),
         cellPhone: z.string().max(11),
         email: z.string().email('E-mail inválido.'),
         password: z.string().min(8, 'A senha deve conter ao menos 8 caracteres.')
