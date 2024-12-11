@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import Header from "@/components/header";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getUserById } from "../actions";
+// import { getUserById } from "../actions";
 import { User } from "@prisma/client";
 
 // Componente: Imagem de Capa
@@ -89,14 +89,14 @@ export default function Profile() {
     setIsEditing(true);
   };
 
-  useEffect(()=>{
-    const getuser = async () => {
-      const userInf = await getUserById("")
-      setUser(userInf)
-    }
+  // useEffect(() => {
+  //   const getuser = async () => {
+  //     const userInf = await getUserById("")
+  //     setUser(userInf)
+  //   }
 
-    getuser()
-  },[])
+  //   getuser()
+  // }, [])
 
   return (
     <div className="w-full h-screen bg-orange-400">

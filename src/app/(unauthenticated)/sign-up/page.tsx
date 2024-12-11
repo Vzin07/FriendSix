@@ -30,12 +30,15 @@ function Signup() {
         password,
         redirect: false
       })
+        .then((res) => {
+          if (res?.ok) {
+            router.replace('/dashboard')
+          }
+        })
     }
 
     if (state.success) {
       login()
-
-      router.replace('/dashboard')
     }
   }, [state.success, router])
 

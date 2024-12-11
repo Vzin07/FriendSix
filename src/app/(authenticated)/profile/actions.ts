@@ -5,12 +5,11 @@ const prisma = new PrismaClient()
 
 
 export async function getUserById(id: string) {
-    console.log("carai")
     const user = await prisma.user.findUnique({
-        where:{
+        where: {
             id: id,
         },
-        select:{
+        select: {
             id: true,
             name: true,
         }
