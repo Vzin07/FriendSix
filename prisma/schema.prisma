@@ -11,8 +11,10 @@ model User {
   id               String             @id @default(uuid())
   name             String             @db.VarChar(90)
   email            String             @unique @db.VarChar(255)
-  cellPhone        String?            @unique @map("cell_phone") @db.VarChar(11)
+  cellPhone        String             @unique @map("cell_phone") @db.VarChar(11)
   password         String
+  photoProfile     String?            @db.LongText
+  photoCapa        String?            @db.LongText
   events           UsersOnEvents[]
   groups           UsersOnGroups[]
   groupPosts       GroupPost[]

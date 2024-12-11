@@ -131,26 +131,28 @@ export async function getPosts(type: 'EVENTO' | 'GRUPO' | 'AMBOS') {
     })
 
     if (userPosts) {
-        const postsWithType = {
-            groupPosts: userPosts.groupPosts.map(post => ({
+        const combinedPosts = [
+            ...userPosts.groupPosts.map(post => ({
                 ...post,
                 type: 'GRUPO',
             })),
-            eventPosts: userPosts.eventPosts.map(post => ({
+            ...userPosts.eventPosts.map(post => ({
                 ...post,
                 type: 'EVENTO',
-            })),
-        };
+            }))
+        ];
 
-        if (type == 'GRUPO') {
-            return postsWithType.groupPosts
-        };
+        combinedPosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-        if (type == 'EVENTO') {
-            return postsWithType.eventPosts
-        };
+        if (type === 'GRUPO') {
+            return userPosts.groupPosts;
+        }
 
-        return postsWithType
+        if (type === 'EVENTO') {
+            return userPosts.eventPosts;
+        }
+
+        return combinedPosts;
     }
 
     return []
@@ -166,6 +168,18 @@ export async function getComments(id: string, type: string) {
         comments = await prisma.commentGroupPost.findMany({
             where: {
                 groupPostId: id
+            },
+            select: {
+                id: true,
+                userId: true,
+                user: {
+                    select: {
+                        name: true,
+                        photoProfile: true
+                    }
+                },
+                groupPostId: true,
+                text: true
             }
         })
 
@@ -180,6 +194,18 @@ export async function getComments(id: string, type: string) {
         comments = await prisma.commentEventPost.findMany({
             where: {
                 eventPostId: id
+            },
+            select: {
+                id: true,
+                userId: true,
+                user: {
+                    select: {
+                        name: true,
+                        photoProfile: true
+                    }
+                },
+                eventPostId: true,
+                text: true
             }
         })
 
@@ -244,4 +270,40 @@ export async function getLikes(id: string, type: string) {
         likeStatus,
         likeCount
     }
+}
+
+export async function fetchUsers(term: string) {
+    const lowerCaseTerm = `%${term.toLowerCase()}%`
+
+    const users = await prisma.$queryRaw`
+    SELECT * FROM Users
+    WHERE LOWER(name) 
+    LIKE LOWER(${lowerCaseTerm})
+  `;
+
+    return users;
+};
+
+export async function fetchGroups(term: string) {
+    const lowerCaseTerm = `%${term.toLowerCase()}%`
+
+    const groups = await prisma.$queryRaw`
+    SELECT * FROM \`Groups\`
+    WHERE LOWER(name) 
+    LIKE LOWER(${lowerCaseTerm})
+  `;
+
+    return groups;
+}
+
+export async function fetchEvents(term: string) {
+    const lowerCaseTerm = `%${term.toLowerCase()}%`
+
+    const events = await prisma.$queryRaw`
+    SELECT * FROM Events
+    WHERE LOWER(name) 
+    LIKE LOWER(${lowerCaseTerm})
+  `;
+
+    return events;
 }

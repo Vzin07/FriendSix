@@ -62,7 +62,7 @@ export async function createEvent(prevState: InitialState, formData: FormData) {
     const schema = z.object({
         name: z.string().max(90, "Nome deve ter até 90 caracteres.").min(4, "nome deve ter no mínimo 4 caracteres"),
         categoryId: z.string().uuid(),
-        date: z.string().datetime({ local: true }),
+        date: z.string().datetime({ local: true },),
         location: z.string()
     })
 
@@ -207,7 +207,7 @@ export async function createPostOnGroup(prevState: InitialState, formData: FormD
     return state
 }
 
-export async function creatCommentOnGroup(prevState: InitialState, formData: FormData) {
+export async function creatComment(prevState: InitialState, formData: FormData, type: string) {
     console.log(formData)
 
     const state = {
@@ -239,10 +239,22 @@ export async function creatCommentOnGroup(prevState: InitialState, formData: For
 
     const user = (await getServerSession(nextAuthOptions))!.user
 
-    await prisma.commentGroupPost.create({
+    if (type == 'GRUPO') {
+        await prisma.commentGroupPost.create({
+            data: {
+                text: data.text,
+                groupPostId: data.id,
+                userId: user.id,
+            }
+        })
+
+        return state
+    }
+
+    await prisma.commentEventPost.create({
         data: {
             text: data.text,
-            groupPostId: data.id,
+            eventPostId: data.id,
             userId: user.id,
         }
     })

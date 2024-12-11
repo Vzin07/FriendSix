@@ -4,7 +4,7 @@ import { createPostOnEvent, createPostOnGroup } from "@/app/(authenticated)/dash
 import { InitialState } from "@/types";
 import { CircleX, PlusSquare, Users } from "lucide-react";
 import { Plus } from "lucide-react";
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 interface CardProps {
@@ -101,22 +101,28 @@ export default function Card(props: CardProps) {
 
   return (
     <div className="w-full h-14 bg-orange-300 hover:bg-orange-500 flex items-center px-2 rounded-lg shadow-sm hover:shadow-black">
-      <div className="w-1/6">
-        <Users color="black" size={26} />
-      </div>
-      <div className="w-5/6">
-        <h1 className="text-sm">{props.name}</h1>
-      </div>
-      <div
-        className="cursor-pointer rounded-lg hover:bg-orange-300"
-        onClick={toggleModal}
-      >
-        {createPost ? <CircleX /> : <Plus />}
+      <div className="flex w-full">
+        <div className="flex gap-1 w-11/12">
+          <div>
+            <Users color="black" size={26} />
+          </div>
+
+          <div>
+            <h1 className="text-sm">{props.name}</h1>
+          </div>
+        </div>
+
+        <div
+          className="cursor-pointer rounded-lg hover:bg-orange-300"
+          onClick={toggleModal}
+        >
+          {createPost ? <CircleX /> : <Plus />}
+        </div>
       </div>
 
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex justify-center items-center">
-          <div className="absolute bg-orange-300 w-3/6 h-3/6 p-3 rounded-lg shadow-md shadow-black">
+          <div className="absolute bg-orange-300 w-3/6 h-3/6 min-h-96 p-3 rounded-lg shadow-md shadow-black">
             <button
               className="absolute top-0 right-0 p-2"
               onClick={toggleModal}

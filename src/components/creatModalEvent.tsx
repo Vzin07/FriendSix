@@ -96,6 +96,9 @@ export default function CreatModalEvent(props: CreatModalEventProps) {
                                     placeholder="Digite o nome do Evento"
                                     required
                                 />
+                                {eventState.errors.name && (
+                                    <p className="text-red-500 text-base mt-1">{eventState.errors.name[0]}</p>
+                                )}
                             </div>
 
                             <div className="mb-4">
@@ -147,6 +150,9 @@ export default function CreatModalEvent(props: CreatModalEventProps) {
                                     id="local"
                                     placeholder="Endereço"
                                 />
+                                {eventState.errors.location && (
+                                    <p className="text-red-500 text-base mt-1">{eventState.errors.location[0]}</p>
+                                )}
                             </div>
                             <button
                                 type="submit"

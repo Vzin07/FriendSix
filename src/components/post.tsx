@@ -11,7 +11,7 @@ interface PostProps {
   description: string;
   userId: string;
   user: string;
-  group: string;
+  groupOrEvent: string|undefined;
   type: string;
   datetime: Date
 }
@@ -49,7 +49,7 @@ export default function Post(props: PostProps) {
   });
 
   return (
-    <div className="bg-orange-300 rounded-md w-full p-3 space-y-1 border-2 border-black shadow-slate-800 shadow-lg">
+    <div className="bg-orange-300 rounded-md w-full max-w-lg min-w-96 p-3 space-y-1 border-2 border-black shadow-slate-800 shadow-lg">
       <div className="flex justify-between w-full -mt-1">
         <div className="flex items-center justify-between">
           <Users color="black" className="size-10 cursor-pointer hover:underline" />
@@ -57,7 +57,7 @@ export default function Post(props: PostProps) {
           <div className="flex-col font-morsan">
             <h2 className="ml-2 text-2xl cursor-pointer hover:underline">{props.user}</h2>
 
-            <h2 className="ml-2 text-x1 cursor-pointer hover:underline">{props.type} | {props.group}</h2>
+            <h2 className="ml-2 text-x1 cursor-pointer hover:underline">{props.type} | {props.groupOrEvent}</h2>
           </div>
         </div>
 

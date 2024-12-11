@@ -98,6 +98,9 @@ export default function CreatModalGroup(props: CreatModalGroupProps) {
                                     placeholder="Digite seu nome"
                                     required
                                 />
+                                {grouptState.errors.name && (
+                                    <p className="text-red-500 text-base mt-1">{grouptState.errors.name[0]}</p>
+                                )}
                             </div>
 
                             <div className="mb-4">
